@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 24
@@ -28,11 +29,14 @@ dependencies {
     compile('com.codepath.libraries:android-oauth-handler:1.0.0@aar') {
         transitive = true
     }
-    compile 'com.android.support:appcompat-v7:24.0.0'
     // Picasso for remote image loading
-    compile 'com.squareup.picasso:picasso:2.5.2'
     // Android Async Http for sending async network requests
-    compile 'com.loopj.android:android-async-http:1.4.9'
     // ActiveAndroid for simple persistence with an ORM
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+    compile 'com.android.support:design:24.1.1'
+    compile 'com.jakewharton:butterknife:8.2.1'
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
 }
