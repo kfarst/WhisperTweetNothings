@@ -1,13 +1,13 @@
-package com.kfarst.apps.whispertweetnothings;
+package com.kfarst.apps.whispertweetnothings.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Toast;
 
 import com.codepath.apps.whispertweetnothings.R;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
+import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 

@@ -1,7 +1,6 @@
-package com.kfarst.apps.whispertweetnothings;
+package com.kfarst.apps.whispertweetnothings.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +76,8 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     @Override
     public void onBindViewHolder(TweetsArrayAdapter.ViewHolder holder, int position) {
         Tweet tweet = mTweets.get(position);
+
+        holder.ivProfileImage.setImageResource(android.R.color.darker_gray);
 
        Glide.with(holder.itemView.getContext())
                .load(tweet.getUser().getProfileImageUrl())

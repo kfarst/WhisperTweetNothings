@@ -1,4 +1,4 @@
-package com.kfarst.apps.whispertweetnothings;
+package com.kfarst.apps.whispertweetnothings.api;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;

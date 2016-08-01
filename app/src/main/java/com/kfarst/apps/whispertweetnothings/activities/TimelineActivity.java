@@ -1,4 +1,4 @@
-package com.kfarst.apps.whispertweetnothings;
+package com.kfarst.apps.whispertweetnothings.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,10 +6,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.codepath.apps.whispertweetnothings.R;
+import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
+import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
+import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
+import com.kfarst.apps.whispertweetnothings.support.DividerItemDecoration;
+import com.kfarst.apps.whispertweetnothings.support.EndlessRecyclerViewScrollListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -56,6 +60,8 @@ public class TimelineActivity extends AppCompatActivity {
                 //loadMoreArticles(page);
             }
         });
+
+        lvTweets.addItemDecoration(new DividerItemDecoration(this));
 
         tweets = new ArrayList<Tweet>();
         adapter = new TweetsArrayAdapter(tweets);
