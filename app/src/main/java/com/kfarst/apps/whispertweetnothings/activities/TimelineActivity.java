@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.codepath.apps.whispertweetnothings.R;
+import com.github.underscore.$;
+import com.github.underscore.Function1;
 import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
 import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
@@ -17,7 +19,9 @@ import com.kfarst.apps.whispertweetnothings.support.EndlessRecyclerViewScrollLis
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,7 +61,7 @@ public class TimelineActivity extends AppCompatActivity {
             public void onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                //loadMoreArticles(page);
+                populateTimeline();
             }
         });
 
@@ -69,7 +73,9 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     private void populateTimeline() {
-       client.getHomeTimeline(new JsonHttpResponseHandler() {
+        Long maxID = tweets.size() > 0 ? sortedTweetsById().get(0).getId() : null;
+
+       client.getHomeTimeline(maxID, new JsonHttpResponseHandler() {
            @Override
            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                ArrayList<Tweet> list = Tweet.fromJSON(response);
@@ -82,5 +88,13 @@ public class TimelineActivity extends AppCompatActivity {
                Log.d("DEBUG", errorResponse.toString());
            }
        });
+    }
+
+    private List<Tweet> sortedTweetsById() {
+        return $.sortBy(tweets, new Function1<Tweet, Long>() {
+            public Long apply(Tweet tweet) {
+                return tweet.getId();
+            }
+        });
     }
 }

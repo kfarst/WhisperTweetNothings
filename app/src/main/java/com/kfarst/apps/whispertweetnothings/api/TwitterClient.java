@@ -1,13 +1,13 @@
 package com.kfarst.apps.whispertweetnothings.api;
 
-import org.scribe.builder.api.Api;
-import org.scribe.builder.api.TwitterApi;
-
 import android.content.Context;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.scribe.builder.api.Api;
+import org.scribe.builder.api.TwitterApi;
 
 /*
  * 
@@ -34,11 +34,16 @@ public class TwitterClient extends OAuthBaseClient {
 
 	// CHANGE THIS
 	// DEFINE METHODS for different API endpoints here
-	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
+	public void getHomeTimeline(Long maxID, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
 		params.put("format", "json");
+
+		if (maxID != null) {
+			params.put("max_id", maxID);
+		}
+
 		client.get(apiUrl, params, handler);
 	}
 

@@ -1,16 +1,10 @@
 package com.kfarst.apps.whispertweetnothings.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
+import java.util.ArrayList;
 
 /*
  * This is a temporary, sample model that demonstrates the basic structure
