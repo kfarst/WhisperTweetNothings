@@ -7,8 +7,8 @@
     android:layout_width="match_parent" android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/ivProfileImage"
         android:scaleType="fitCenter"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -32,7 +32,6 @@
         android:text="New Text"
         android:id="@+id/tvTweetBody"
         android:layout_below="@+id/tvUserName"
-        android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/ivProfileImage"
         android:layout_toEndOf="@+id/ivProfileImage" />
 
