@@ -32,13 +32,14 @@ dependencies {
     // Picasso for remote image loading
     // Android Async Http for sending async network requests
     // ActiveAndroid for simple persistence with an ORM
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
+    compile group: 'com.github.javadev', name: 'underscore', version: '1.16'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     compile 'com.android.support:design:24.1.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.jakewharton:butterknife:8.2.1'
-    apt 'com.jakewharton:butterknife-compiler:8.2.1'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
-    compile group: 'com.github.javadev', name: 'underscore', version: '1.16'
+    compile 'com.android.support:support-v4:24.1.1'
 }

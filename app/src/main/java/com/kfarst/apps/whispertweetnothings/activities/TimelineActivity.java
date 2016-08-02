@@ -1,11 +1,14 @@
 package com.kfarst.apps.whispertweetnothings.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.codepath.apps.whispertweetnothings.R;
 import com.github.underscore.$;
@@ -13,6 +16,7 @@ import com.github.underscore.Function1;
 import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
 import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
+import com.kfarst.apps.whispertweetnothings.fragments.ComposeTweetFragment;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.kfarst.apps.whispertweetnothings.support.DividerItemDecoration;
 import com.kfarst.apps.whispertweetnothings.support.EndlessRecyclerViewScrollListener;
@@ -25,9 +29,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.OnFragmentInteractionListener {
 
     @BindView(R.id.lvTweets) RecyclerView lvTweets;
 
@@ -96,5 +101,18 @@ public class TimelineActivity extends AppCompatActivity {
                 return tweet.getId();
             }
         });
+    }
+
+    @OnClick(R.id.fabCompose)
+    public void openComposeDialog(View view) {
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance();
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        composeDialog.show(fm, "fragment_compose_tweet");
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
