@@ -1,8 +1,15 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    tools:context="com.kfarst.apps.whispertweetnothings.fragments.ComposeTweetFragment">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="tweetViewModel" type="com.kfarst.apps.whispertweetnothings.models.TweetViewModel"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        tools:context="com.kfarst.apps.whispertweetnothings.fragments.ComposeTweetFragment">
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -30,19 +37,30 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="What's happening?"
-            android:textColorHint="@color/divider_gray"
-            android:id="@+id/textView"
+            android:text="@{tweetViewModel.tweet.text}"
+            android:addTextChangedListener="@{tweetViewModel.watcher}"
+            android:background="@android:color/transparent"
+            android:textColorHint="@android:color/darker_gray"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/etTweet"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_alignParentLeft="true"
-            android:layout_alignBottom="@+id/btnTweet"
             android:layout_below="@+id/ivOwnProfileImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{""+tweetViewModel.charactersRemaining}'
+            android:textColor="@{tweetViewModel.charactersRemaining > -1 ? @android:color/darker_gray : @android:color/holo_red_dark}"
+            android:layout_alignBaseline="@+id/btnTweet"
+            android:layout_toLeftOf="@+id/btnTweet" />
 
         <Button
             android:layout_width="wrap_content"
@@ -57,4 +75,5 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true" />
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

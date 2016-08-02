@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Tweet /*extends Model*/ {
 	// Define table fields
 	//@Column(name = "body")
-	private String text;
+	private String text = "";
 
 	//@Column(name = "uid")
 	private Long id;
@@ -93,5 +93,9 @@ public class Tweet /*extends Model*/ {
         }
 
         return tweets;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }
