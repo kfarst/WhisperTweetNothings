@@ -91,7 +91,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
                .into(holder.ivProfileImage);
 
        holder.tvUserName.setText(tweet.getUser().getScreenName());
-       holder.tvTweetBody.setText(tweet.getText());
+       holder.tvTweetBody.setText(tweet.getStatus());
         holder.tvRelativeTimestamp.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
     }
 

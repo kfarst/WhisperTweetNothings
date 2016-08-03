@@ -16,13 +16,17 @@ import java.util.ArrayList;
 public class Tweet /*extends Model*/ {
 	// Define table fields
 	//@Column(name = "body")
-	private String text = "";
+	private String status = "";
 
 	//@Column(name = "uid")
 	private Long id;
 
 	//@Column(name = "createdAt")
 	private String createdAt;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     //@Column(name = "user")
     private User user;
@@ -32,8 +36,8 @@ public class Tweet /*extends Model*/ {
 	}
 
 	// Getters
-	public String getText() {
-		return text;
+	public String getStatus() {
+		return status;
 	}
 
     public Long getId() {
@@ -62,7 +66,7 @@ public class Tweet /*extends Model*/ {
        Tweet tweet = new Tweet();
 
         try {
-            tweet.text = jsonObject.getString("text");
+            tweet.status = jsonObject.getString("text");
             tweet.id = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
@@ -95,7 +99,7 @@ public class Tweet /*extends Model*/ {
         return tweets;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

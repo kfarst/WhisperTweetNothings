@@ -3,6 +3,7 @@ package com.kfarst.apps.whispertweetnothings.api;
 import android.content.Context;
 
 import com.codepath.oauth.OAuthBaseClient;
+import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -45,6 +46,19 @@ public class TwitterClient extends OAuthBaseClient {
 		}
 
 		client.get(apiUrl, params, handler);
+	}
+
+	public void getCurrentUser(AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("account/verify_credentials.json");
+		RequestParams params = new RequestParams();
+		client.get(apiUrl, params, handler);
+	}
+
+	public void postStatus(Tweet tweet, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+        params.put("status", tweet.getStatus());
+		client.post(apiUrl, params, handler);
 	}
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint

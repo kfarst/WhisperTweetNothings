@@ -1,12 +1,13 @@
 package com.kfarst.apps.whispertweetnothings.activities;
 
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -18,11 +19,15 @@ import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
 import com.kfarst.apps.whispertweetnothings.fragments.ComposeTweetFragment;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
+import com.kfarst.apps.whispertweetnothings.models.User;
+import com.kfarst.apps.whispertweetnothings.support.ColoredSnackBar;
 import com.kfarst.apps.whispertweetnothings.support.DividerItemDecoration;
 import com.kfarst.apps.whispertweetnothings.support.EndlessRecyclerViewScrollListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +37,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.OnFragmentInteractionListener {
+public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.PostStatusDialogListener {
 
     @BindView(R.id.lvTweets) RecyclerView lvTweets;
 
-    private TwitterClient client;
+    private TwitterClient client = TwitterApplication.getRestClient();
     private ArrayList<Tweet> tweets;
     private TweetsArrayAdapter adapter;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +56,22 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         ButterKnife.bind(this);
 
         setupViews();
-
-        client = TwitterApplication.getRestClient();
+        getCurrentUser();
         populateTimeline();
+    }
+
+    private void getCurrentUser() {
+        client.getCurrentUser(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                currentUser = User.fromJSON(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+            }
+        });
     }
 
     private void setupViews() {
@@ -106,13 +125,45 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     @OnClick(R.id.fabCompose)
     public void openComposeDialog(View view) {
         FragmentManager fm = getSupportFragmentManager();
-        ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance();
+        ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(currentUser);
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         composeDialog.show(fm, "fragment_compose_tweet");
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFinishEditDialog(Tweet tweet) {
+        client.postStatus(tweet, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                tweets.add(Tweet.fromJSON(response));
+                adapter.notifyItemChanged(tweets.size() - 1);
+            }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                String errorMessage = getErrorsFromResponse(errorResponse);
+
+                if (!TextUtils.isEmpty(errorMessage)) {
+                    Snackbar snackbar = Snackbar.make(lvTweets, errorMessage, Snackbar.LENGTH_SHORT);
+                    ColoredSnackBar.alert(snackbar).show();
+                }
+            }
+
+            public String getErrorsFromResponse(JSONObject errorResponse) {
+                ArrayList<String> errorString = new ArrayList<String>();
+
+                try {
+                    JSONArray errors = errorResponse.getJSONArray("errors");
+
+                    for (int i = 0; i < errors.length(); i++) {
+                        errorString.add(String.valueOf(errors.getJSONObject(i).get("message")));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return TextUtils.join(" ", errorString);
+            }
+        });
     }
 }

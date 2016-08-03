@@ -26,7 +26,7 @@ public class TweetViewModel extends BaseObservable {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            tweet.setText(editable.toString());
+            tweet.setStatus(editable.toString());
             charactersRemaining.set(TOTAL_TWEET_LENGTH - editable.toString().length());
         }
     };

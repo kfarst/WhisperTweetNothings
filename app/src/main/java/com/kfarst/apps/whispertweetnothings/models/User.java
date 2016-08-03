@@ -2,6 +2,7 @@ package com.kfarst.apps.whispertweetnothings.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 /*
  * This is a temporary, sample model that demonstrates the basic structure
@@ -9,20 +10,21 @@ import org.json.JSONObject;
  * https://github.com/pardom/ActiveAndroid/wiki/Creating-your-database-model
  *
  */
+@Parcel
 //@Table(name = "users")
 public class User /*extends Model*/ {
     // Define table fields
     //@Column(name = "name")
-    private String name;
+    public String name;
 
     //@Column(name = "uid")
-    private Long id;
+    public Long id;
 
     //@Column(name = "screenName")
-    private String screenName;
+    public String screenName;
 
     //@Column(name = "profileImageUrl")
-    private String profileImageUrl;
+    public String profileImageUrl;
 
     public User() {
         super();
