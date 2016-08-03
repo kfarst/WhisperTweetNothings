@@ -136,7 +136,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 tweets.add(Tweet.fromJSON(response));
-                adapter.notifyItemChanged(tweets.size() - 1);
+                adapter.notifyItemInserted(tweets.size() - 1);
             }
 
             @Override
