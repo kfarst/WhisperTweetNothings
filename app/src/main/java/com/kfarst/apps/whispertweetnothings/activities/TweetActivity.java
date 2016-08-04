@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 public class TweetActivity extends AppCompatActivity {
     @BindView(R.id.ivTweetProfileImage) ImageView ivTweetProfileImage;
     @BindView(R.id.tvTweetUserName) TextView tvTweetUserName;
+    @BindView(R.id.tvTweetUserHandle) TextView tvTweetUserHandle;
     @BindView(R.id.tvTweetDetailStatus) LinkifiedTextView tvTweetDetailStatus;
     @BindView(R.id.ivTweetMedia) ImageView ivTweetMedia;
 
@@ -56,7 +57,8 @@ public class TweetActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivTweetProfileImage);
 
-        tvTweetUserName.setText(tweet.getUser().getScreenName());
+        tvTweetUserName.setText(tweet.getUser().getName());
+        tvTweetUserHandle.setText("@" + tweet.getUser().getScreenName());
         tvTweetDetailStatus.setText(tweet.getStatus());
 
         if (tweet.getMediaUrl() != null) {
