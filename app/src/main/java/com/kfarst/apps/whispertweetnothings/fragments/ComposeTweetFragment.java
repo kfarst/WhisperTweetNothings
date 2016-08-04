@@ -18,6 +18,7 @@ import org.parceler.Parcels;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class ComposeTweetFragment extends DialogFragment {
     public interface PostStatusDialogListener {
@@ -55,7 +56,7 @@ public class ComposeTweetFragment extends DialogFragment {
 
             Glide.with(binding.ivOwnProfileImage.getContext())
                     .load(currentUser.getProfileImageUrl())
-                    //.bitmapTransform(new RoundedCornersTransformation(binding.ivOwnProfileImage.getContext(), 10, 0))
+                    .bitmapTransform(new RoundedCornersTransformation(binding.ivOwnProfileImage.getContext(), 10, 0))
                     .into(binding.ivOwnProfileImage);
         }
 

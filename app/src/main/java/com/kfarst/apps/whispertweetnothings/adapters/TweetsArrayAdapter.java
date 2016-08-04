@@ -104,7 +104,8 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         holder.tvUserName.setText(tweet.getUser().getScreenName());
         holder.tvTweetBody.setText(tweet.getStatus());
         holder.tvRelativeTimestamp.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
-
+        holder.ivMedia.setImageDrawable(null);
+        
         if (tweet.getMediaUrl() != null) {
             Glide.with(holder.itemView.getContext())
                     .load(tweet.getMediaUrl())
