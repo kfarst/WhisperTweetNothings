@@ -52,6 +52,7 @@
         android:id="@+id/ivMedia"
         android:layout_below="@+id/tvTweetBody"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_centerHorizontal="true"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
