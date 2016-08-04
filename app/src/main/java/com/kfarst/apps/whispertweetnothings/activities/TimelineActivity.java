@@ -31,6 +31,7 @@ import com.kfarst.apps.whispertweetnothings.models.User;
 import com.kfarst.apps.whispertweetnothings.support.ColoredSnackBar;
 import com.kfarst.apps.whispertweetnothings.support.DividerItemDecoration;
 import com.kfarst.apps.whispertweetnothings.support.EndlessRecyclerViewScrollListener;
+import com.kfarst.apps.whispertweetnothings.support.SmoothScrollLinearLayoutManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.yalantis.taurus.PullToRefreshView;
 
@@ -101,7 +102,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     private void setupViews() {
         lvTweets.setHasFixedSize(true);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        SmoothScrollLinearLayoutManager linearLayoutManager = new SmoothScrollLinearLayoutManager(this);
         lvTweets.setLayoutManager(linearLayoutManager);
 
         lvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -178,8 +179,11 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         client.postStatus(tweet, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                tweets.add(Tweet.fromJSON(response));
-                adapter.notifyItemInserted(tweets.size() - 1);
+                tweets.add(0, Tweet.fromJSON(response));
+                adapter.notifyItemInserted(0);
+                lvTweets.scrollToPosition(0);
+                Snackbar snackbar = Snackbar.make(lvTweets, "Status successfully tweeted.", Snackbar.LENGTH_SHORT);
+                ColoredSnackBar.confirm(snackbar).show();
             }
 
             @Override
