@@ -43,7 +43,16 @@
         <activity
             android:name="com.kfarst.apps.whispertweetnothings.activities.TimelineActivity"
             android:label="@string/title_activity_timeline"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.kfarst.apps.whispertweetnothings.activities.TweetActivity"
+            android:label="@string/title_activity_tweet"
+            android:parentActivityName="com.kfarst.apps.whispertweetnothings.activities.TimelineActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kfarst.apps.whispertweetnothings.activities.TimelineActivity" />
+        </activity>
     </application>
 
 </manifest>

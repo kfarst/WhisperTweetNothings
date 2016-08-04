@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
 
@@ -27,8 +28,12 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  * Created by kfarst on 7/25/16.
  */
 public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.ViewHolder> {
-    private List<Tweet> mTweets;
+    public interface OnTweetClickListener {
+       void onTweetClick(Tweet tweet);
+    }
+    private static List<Tweet> mTweets;
     private AdapterView.OnItemClickListener listener;
+    private static OnTweetClickListener tweetClickListener;
 
     // Pass in the contact array into the constructor
     public TweetsArrayAdapter(List<Tweet> tweets) {
@@ -37,7 +42,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
         @BindView(R.id.tvUserName) TextView tvUserName;
         @BindView(R.id.tvTweetBody) TextView tvTweetBody;
@@ -49,19 +54,22 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(this);
         }
 
-        public void bind(final Tweet article, final AdapterView.OnItemClickListener listener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                   //Context context = view.getContext();
-                   //Intent i = new Intent(context, TimelineActivity.class);
-                   //i.putExtra("article", article);
-                   //context.startActivity(i);
-                }
-            });
+        @Override
+        public void onClick(View view) {
+            Tweet tweet = mTweets.get(getAdapterPosition());
+
+            if (tweet != null) {
+                tweetClickListener.onTweetClick(tweet);
+            }
         }
+    }
+
+    public void setOnTweetClickListener(OnTweetClickListener listener) {
+        tweetClickListener = listener;
     }
 
     @Override
@@ -85,13 +93,14 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
         holder.ivProfileImage.setImageResource(android.R.color.darker_gray);
 
-       Glide.with(holder.itemView.getContext())
-               .load(tweet.getUser().getProfileImageUrl())
-               .bitmapTransform(new RoundedCornersTransformation(holder.itemView.getContext(), 10, 0))
-               .into(holder.ivProfileImage);
+        Glide.with(holder.itemView.getContext())
+                .load(tweet.getUser().getProfileImageUrl())
+                .bitmapTransform(new RoundedCornersTransformation(holder.itemView.getContext(), 10, 0))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.ivProfileImage);
 
-       holder.tvUserName.setText(tweet.getUser().getScreenName());
-       holder.tvTweetBody.setText(tweet.getStatus());
+        holder.tvUserName.setText(tweet.getUser().getScreenName());
+        holder.tvTweetBody.setText(tweet.getStatus());
         holder.tvRelativeTimestamp.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
     }
 

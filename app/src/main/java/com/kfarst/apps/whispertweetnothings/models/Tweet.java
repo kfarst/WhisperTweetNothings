@@ -3,6 +3,7 @@ package com.kfarst.apps.whispertweetnothings.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
  * 
  */
 //@Table(name = "tweets")
+@Parcel
 public class Tweet /*extends Model*/ {
 	// Define table fields
 	//@Column(name = "body")

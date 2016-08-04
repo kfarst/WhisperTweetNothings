@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+            android:id="@+id/ivToolbarProfileImage"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_width="?android:attr/actionBarSize"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:scaleType="fitCenter"
+            android:layout_height="?android:attr/actionBarSize" />
+
+    <TextView
+            android:layout_toRightOf="@+id/ivToolbarProfileImage"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Home"
+            android:layout_height="match_parent"/>
+</RelativeLayout>
