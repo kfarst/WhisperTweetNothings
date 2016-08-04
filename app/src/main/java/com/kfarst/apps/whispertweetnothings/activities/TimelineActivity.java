@@ -32,6 +32,7 @@ import com.kfarst.apps.whispertweetnothings.support.ColoredSnackBar;
 import com.kfarst.apps.whispertweetnothings.support.DividerItemDecoration;
 import com.kfarst.apps.whispertweetnothings.support.EndlessRecyclerViewScrollListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.yalantis.taurus.PullToRefreshView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +52,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
 
     @BindView(R.id.lvTweets) RecyclerView lvTweets;
     @BindView(R.id.ivToolbarProfileImage) ImageView ivToolbarProfileImage;
+    @BindView(R.id.pullToRefresh) PullToRefreshView pullToRefreshView;
+
+    public static final int REFRESH_DELAY = 2000;
 
     private TwitterClient client = TwitterApplication.getRestClient();
     private ArrayList<Tweet> tweets;
@@ -71,7 +75,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
 
         setupViews();
         getCurrentUser();
-        populateTimeline();
+        populateTimeline(null);
     }
 
     private void getCurrentUser() {
@@ -105,7 +109,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             public void onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                populateTimeline();
+                populateTimeline(tweets.get(tweets.size() - 1).getId());
+
             }
         });
 
@@ -115,17 +120,34 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         adapter = new TweetsArrayAdapter(tweets);
         adapter.setOnTweetClickListener(this);
         lvTweets.setAdapter(adapter);
+
+        pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        populateTimeline(null);
+                    }
+                }, REFRESH_DELAY);
+            }
+        });
     }
 
-    private void populateTimeline() {
-        Long maxID = tweets.size() > 0 ? tweets.get(tweets.size() - 1).getId() : null;
-
-       client.getHomeTimeline(maxID, new JsonHttpResponseHandler() {
+    private void populateTimeline(final Long maxId) {
+       client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
            @Override
            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                ArrayList<Tweet> list = Tweet.fromJSON(response);
+
+               if (maxId == null) {
+                   tweets.clear();
+                   pullToRefreshView.setRefreshing(false);
+               }
+
                tweets.addAll(list);
                adapter.notifyDataSetChanged();
+
            }
 
            @Override

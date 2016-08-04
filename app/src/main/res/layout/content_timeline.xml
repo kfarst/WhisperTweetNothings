@@ -8,12 +8,18 @@
     tools:context="com.kfarst.apps.whispertweetnothings.activities.TimelineActivity"
     tools:showIn="@layout/activity_timeline">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/lvTweets"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="?android:attr/dividerHeight"
+    <com.yalantis.taurus.PullToRefreshView
+        android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lvTweets"
+            android:background="@android:color/white"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="?android:attr/dividerHeight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.yalantis.taurus.PullToRefreshView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabCompose"
