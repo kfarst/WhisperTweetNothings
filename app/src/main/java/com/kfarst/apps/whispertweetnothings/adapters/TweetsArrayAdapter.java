@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
+import com.kfarst.apps.whispertweetnothings.support.LinkifiedTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,7 +46,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
         @BindView(R.id.tvUserName) TextView tvUserName;
-        @BindView(R.id.tvTweetBody) TextView tvTweetBody;
+        @BindView(R.id.tvTweetBody) LinkifiedTextView tvTweetBody;
         @BindView(R.id.tvRelativeTimestamp) TextView tvRelativeTimestamp;
 
         public ViewHolder(View itemView) {

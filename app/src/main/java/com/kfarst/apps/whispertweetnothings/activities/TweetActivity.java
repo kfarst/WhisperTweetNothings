@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
+import com.kfarst.apps.whispertweetnothings.support.LinkifiedTextView;
 
 import org.parceler.Parcels;
 
@@ -21,7 +22,7 @@ import butterknife.ButterKnife;
 public class TweetActivity extends AppCompatActivity {
     @BindView(R.id.ivTweetProfileImage) ImageView ivTweetProfileImage;
     @BindView(R.id.tvTweetUserName) TextView tvTweetUserName;
-    @BindView(R.id.tvTweetDetailStatus) TextView tvTweetDetailStatus;
+    @BindView(R.id.tvTweetDetailStatus) LinkifiedTextView tvTweetDetailStatus;
 
     private Tweet tweet;
 

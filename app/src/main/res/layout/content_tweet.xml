@@ -28,8 +28,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <TextView
+    <com.kfarst.apps.whispertweetnothings.support.LinkifiedTextView
         android:id="@+id/tvTweetDetailStatus"
+        android:autoLink="all"
+        android:linksClickable="true"
         android:layout_below="@+id/ivTweetProfileImage"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
