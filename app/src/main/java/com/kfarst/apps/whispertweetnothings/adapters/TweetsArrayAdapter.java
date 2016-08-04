@@ -48,6 +48,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         @BindView(R.id.tvUserName) TextView tvUserName;
         @BindView(R.id.tvTweetBody) LinkifiedTextView tvTweetBody;
         @BindView(R.id.tvRelativeTimestamp) TextView tvRelativeTimestamp;
+        @BindView(R.id.ivMedia) ImageView ivMedia;
 
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
@@ -103,6 +104,15 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         holder.tvUserName.setText(tweet.getUser().getScreenName());
         holder.tvTweetBody.setText(tweet.getStatus());
         holder.tvRelativeTimestamp.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
+
+        if (tweet.getMediaUrl() != null) {
+            Glide.with(holder.itemView.getContext())
+                    .load(tweet.getMediaUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.ivMedia);
+
+            holder.ivMedia.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

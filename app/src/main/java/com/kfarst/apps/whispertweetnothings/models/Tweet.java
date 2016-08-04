@@ -33,6 +33,8 @@ public class Tweet /*extends Model*/ {
     //@Column(name = "user")
     private User user;
 
+    private String mediaUrl;
+
 	public Tweet() {
 		super();
 	}
@@ -54,6 +56,14 @@ public class Tweet /*extends Model*/ {
         return user;
     }
 
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+    }
+
     // Record Finders
     //public static Tweet byId(long uid) {
     //  return new Select().from(Tweet.class).where("uid = ?", uid).executeSingle();
@@ -72,6 +82,9 @@ public class Tweet /*extends Model*/ {
             tweet.id = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+
+            JSONObject mediaObj = (JSONObject) jsonObject.getJSONObject("entities").getJSONArray("media").get(0);
+            tweet.mediaUrl = mediaObj.getString("media_url");
         } catch (JSONException e) {
             e.printStackTrace();
         }

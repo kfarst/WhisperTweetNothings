@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ public class TweetActivity extends AppCompatActivity {
     @BindView(R.id.ivTweetProfileImage) ImageView ivTweetProfileImage;
     @BindView(R.id.tvTweetUserName) TextView tvTweetUserName;
     @BindView(R.id.tvTweetDetailStatus) LinkifiedTextView tvTweetDetailStatus;
+    @BindView(R.id.ivTweetMedia) ImageView ivTweetMedia;
 
     private Tweet tweet;
 
@@ -44,6 +46,10 @@ public class TweetActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        setupViews();
+    }
+
+    private void setupViews() {
         Glide.with(ivTweetProfileImage.getContext())
                 .load(tweet.getUser().getProfileImageUrl())
                 .bitmapTransform(new jp.wasabeef.glide.transformations.RoundedCornersTransformation(ivTweetProfileImage.getContext(), 10, 0))
@@ -52,6 +58,15 @@ public class TweetActivity extends AppCompatActivity {
 
         tvTweetUserName.setText(tweet.getUser().getScreenName());
         tvTweetDetailStatus.setText(tweet.getStatus());
+
+        if (tweet.getMediaUrl() != null) {
+            Glide.with(ivTweetMedia.getContext())
+                    .load(tweet.getMediaUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ivTweetMedia);
+
+            ivTweetMedia.setVisibility(View.VISIBLE);
+        }
     }
 
 }
