@@ -70,7 +70,7 @@
             android:background="@drawable/rounded_button"
             android:text="Tweet"
             android:id="@+id/btnTweet"
-            android:alpha="@{tweetViewModel.charactersRemaining == 140 &amp;&amp; tweetViewModel.charactersRemaining > -1 ? 0.5f : 1.0f}"
+            android:alpha="@{tweetViewModel.charactersRemaining == 140 || tweetViewModel.charactersRemaining &lt; 0 ? 0.5f : 1.0f}"
             android:clickable="@{tweetViewModel.charactersRemaining &lt; 140 &amp;&amp; tweetViewModel.charactersRemaining > -1 ? true : false}"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:stateListAnimator="@null"
