@@ -1,11 +1,17 @@
 package com.kfarst.apps.whispertweetnothings.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  * This is a temporary, sample model that demonstrates the basic structure
@@ -13,17 +19,17 @@ import java.util.ArrayList;
  * https://github.com/pardom/ActiveAndroid/wiki/Creating-your-database-model
  * 
  */
-//@Table(name = "tweets")
+@Table(name = "tweets")
 @Parcel
-public class Tweet /*extends Model*/ {
+public class Tweet extends Model {
 	// Define table fields
-	//@Column(name = "body")
+	@Column(name = "status")
 	private String status = "";
 
-	//@Column(name = "uid")
-	private Long id;
+	@Column(name = "uid")
+	private Long uid;
 
-	//@Column(name = "createdAt")
+	@Column(name = "createdAt")
 	private String createdAt;
 
     public void setUser(User user) {
@@ -33,6 +39,7 @@ public class Tweet /*extends Model*/ {
     //@Column(name = "user")
     private User user;
 
+    @Column(name = "mediaUrl")
     private String mediaUrl;
 
 	public Tweet() {
@@ -44,8 +51,8 @@ public class Tweet /*extends Model*/ {
 		return status;
 	}
 
-    public Long getId() {
-        return id;
+    public Long getUid() {
+        return uid;
     }
 
     public String getCreatedAt() {
@@ -65,13 +72,13 @@ public class Tweet /*extends Model*/ {
     }
 
     // Record Finders
-    //public static Tweet byId(long uid) {
-    //  return new Select().from(Tweet.class).where("uid = ?", uid).executeSingle();
-    //}
+    public static Tweet byId(long uid) {
+      return new Select().from(Tweet.class).where("uid = ?", uid).executeSingle();
+    }
 
-    //public static List<Tweet> recentItems() {
-    //  return new Select().from(Tweet.class).orderBy("uid DESC").limit("300").execute();
-    //}
+    public static List<Tweet> recentItems() {
+      return new Select().from(Tweet.class).orderBy("uid DESC").limit("300").execute();
+    }
 
     // Decodes tweet json into tweet model object
     public static Tweet fromJSON(JSONObject jsonObject) {
@@ -79,7 +86,7 @@ public class Tweet /*extends Model*/ {
 
         try {
             tweet.status = jsonObject.getString("text");
-            tweet.id = jsonObject.getLong("id");
+            tweet.uid = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
 

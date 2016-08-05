@@ -122,17 +122,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         adapter.setOnTweetClickListener(this);
         lvTweets.setAdapter(adapter);
 
-        pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                pullToRefreshView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        populateTimeline(null);
-                    }
-                }, REFRESH_DELAY);
-            }
-        });
+        pullToRefreshView.setOnRefreshListener(() -> pullToRefreshView.postDelayed(() -> populateTimeline(null), REFRESH_DELAY));
     }
 
     private void populateTimeline(final Long maxId) {
@@ -156,14 +146,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                Log.d("DEBUG", errorResponse.toString());
            }
        });
-    }
-
-    private List<Tweet> sortedTweetsById() {
-        return $.sortBy(tweets, new Function1<Tweet, Long>() {
-            public Long apply(Tweet tweet) {
-                return tweet.getId();
-            }
-        });
     }
 
     @OnClick(R.id.fabCompose)

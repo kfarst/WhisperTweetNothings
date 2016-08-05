@@ -1,8 +1,15 @@
 package com.kfarst.apps.whispertweetnothings.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
+
+import java.util.List;
 
 /*
  * This is a temporary, sample model that demonstrates the basic structure
@@ -11,19 +18,19 @@ import org.parceler.Parcel;
  *
  */
 @Parcel
-//@Table(name = "users")
-public class User /*extends Model*/ {
+@Table(name = "users")
+public class User extends Model {
     // Define table fields
-    //@Column(name = "name")
+    @Column(name = "name")
     public String name;
 
-    //@Column(name = "uid")
-    public Long id;
+    @Column(name = "uid")
+    public Long uid;
 
-    //@Column(name = "screenName")
+    @Column(name = "screenName")
     public String screenName;
 
-    //@Column(name = "profileImageUrl")
+    @Column(name = "profileImageUrl")
     public String profileImageUrl;
 
     public User() {
@@ -36,7 +43,7 @@ public class User /*extends Model*/ {
 
         try {
             this.name = object.getString("name");
-            this.id = object.getLong("id");
+            this.uid = object.getLong("id");
             this.screenName = object.getString("screen_name");
             this.profileImageUrl = object.getString("profile_image_url");
         } catch (JSONException e) {
@@ -49,8 +56,8 @@ public class User /*extends Model*/ {
         return name;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUid() {
+        return uid;
     }
 
     public String getScreenName() {
@@ -62,20 +69,20 @@ public class User /*extends Model*/ {
     }
 
     // Record Finders
-    //public static User byId(long uid) {
-    //    return new Select().from(User.class).where("uid = ?", uid).executeSingle();
-    //}
+    public static User byId(long uid) {
+        return new Select().from(User.class).where("uid = ?", uid).executeSingle();
+    }
 
-    //public static List<User> recentItems() {
-    //    return new Select().from(User.class).orderBy("uid DESC").limit("300").execute();
-    //}
+    public static List<User> recentItems() {
+        return new Select().from(User.class).orderBy("uid DESC").limit("300").execute();
+    }
 
     public static User fromJSON(JSONObject jsonObject) {
         User user = new User();
 
         try {
             user.name = jsonObject.getString("name");
-            user.id = jsonObject.getLong("id");
+            user.uid = jsonObject.getLong("id");
             user.screenName = jsonObject.getString("screen_name");
             user.profileImageUrl = jsonObject.getString("profile_image_url");
         } catch (JSONException e) {
