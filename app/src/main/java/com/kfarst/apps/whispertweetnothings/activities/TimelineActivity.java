@@ -161,7 +161,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Snackbar errorSnackbar = Snackbar.make(lvTweets, "Cannot retrieve messages at this time. Please try again later.", Snackbar.LENGTH_SHORT);
+                Snackbar errorSnackbar = Snackbar.make(lvTweets, R.string.offline_message, Snackbar.LENGTH_SHORT);
                 ColoredSnackBar.alert(errorSnackbar).show();
             }
         });
@@ -170,7 +170,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     @OnClick(R.id.fabCompose)
     public void openComposeDialog(View view) {
         FragmentManager fm = getSupportFragmentManager();
-        ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(currentUser);
+        ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(null);
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         composeDialog.show(fm, "fragment_compose_tweet");
     }

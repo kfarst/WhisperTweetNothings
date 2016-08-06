@@ -46,11 +46,14 @@ public class Tweet extends Model {
     @Column(name = "mediaUrl")
     private String mediaUrl;
 
+    @Column(name = "retweetCount")
+    private int retweetCount;
+
 	public Tweet() {
 		super();
 	}
 
-	// Getters
+	// Setters/Getters
 	public String getStatus() {
 		return status;
 	}
@@ -74,6 +77,15 @@ public class Tweet extends Model {
     public void setMediaUrl(String mediaUrl) {
         this.mediaUrl = mediaUrl;
     }
+
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
+    public void setRetweetCount(int retweetCount) {
+        this.retweetCount = retweetCount;
+    }
+
 
     // Record Finders
     public static Tweet byId(long uid) {
@@ -118,6 +130,7 @@ public class Tweet extends Model {
             tweet.status = jsonObject.getString("text");
             tweet.uid = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
+            tweet.retweetCount = jsonObject.getInt("retweet_count");
             tweet.user = User.findOrCreateFromJSON(jsonObject.getJSONObject("user"));
 
            JSONObject mediaObj = (JSONObject) jsonObject.getJSONObject("entities").getJSONArray("media").get(0);
