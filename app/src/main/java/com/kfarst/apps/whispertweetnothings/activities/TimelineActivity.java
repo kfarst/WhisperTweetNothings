@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -20,8 +19,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
-import com.github.underscore.$;
-import com.github.underscore.Function1;
 import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
 import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
@@ -40,8 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,7 +72,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         ButterKnife.bind(this);
 
         setupViews();
-        getCurrentUser();
+        if (isOnline()) {
+            getCurrentUser();
+        }
         populateTimeline(null);
     }
 
@@ -83,7 +82,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         client.getCurrentUser(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                currentUser = User.fromJSON(response);
+                currentUser = User.findOrCreateFromJSON(response);
 
                 Glide.with(ivToolbarProfileImage.getContext())
                         .load(currentUser.getProfileImageUrl())
@@ -110,7 +109,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             public void onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                populateTimeline(tweets.get(tweets.size() - 1).getId());
+                populateTimeline(tweets.get(tweets.size() - 1).getUid());
 
             }
         });
@@ -122,30 +121,50 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         adapter.setOnTweetClickListener(this);
         lvTweets.setAdapter(adapter);
 
-        pullToRefreshView.setOnRefreshListener(() -> pullToRefreshView.postDelayed(() -> populateTimeline(null), REFRESH_DELAY));
+        pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        populateTimeline(null);
+                        pullToRefreshView.setRefreshing(false);
+                    }
+                }, REFRESH_DELAY);
+            }
+        });
     }
 
     private void populateTimeline(final Long maxId) {
-       client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
-           @Override
-           public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-               ArrayList<Tweet> list = Tweet.fromJSON(response);
+        if (!isOnline() && tweets.size() == 0) {
+            tweets.addAll(Tweet.recentItems());
+            adapter.notifyDataSetChanged();
+            Snackbar offlineSnackbar = Snackbar.make(lvTweets, "You are currently offline and will not be able to update or post to your timeline.", Snackbar.LENGTH_LONG);
+            ColoredSnackBar.warning(offlineSnackbar).show();
+        }
 
-               if (maxId == null) {
-                   tweets.clear();
-                   pullToRefreshView.setRefreshing(false);
-               }
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                ArrayList<Tweet> list = new ArrayList<Tweet>();
 
-               tweets.addAll(list);
-               adapter.notifyDataSetChanged();
+                if (maxId == null) {
+                    Tweet.deleteAll();
+                    tweets.clear();
+                    pullToRefreshView.setRefreshing(false);
+                }
 
-           }
+                tweets.addAll(Tweet.fromJSON(response));
+                adapter.notifyDataSetChanged();
 
-           @Override
-           public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-               Log.d("DEBUG", errorResponse.toString());
-           }
-       });
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Snackbar errorSnackbar = Snackbar.make(lvTweets, "Cannot retrieve messages at this time. Please try again later.", Snackbar.LENGTH_SHORT);
+                ColoredSnackBar.alert(errorSnackbar).show();
+            }
+        });
     }
 
     @OnClick(R.id.fabCompose)
@@ -212,5 +231,16 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         builder.setContentIntent(pendingIntent);
 
         startActivity(tweetIntent);
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+        return false;
     }
 }

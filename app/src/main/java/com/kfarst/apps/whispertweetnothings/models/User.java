@@ -17,14 +17,14 @@ import java.util.List;
  * https://github.com/pardom/ActiveAndroid/wiki/Creating-your-database-model
  *
  */
-@Parcel
 @Table(name = "users")
+@Parcel(analyze={User.class})
 public class User extends Model {
     // Define table fields
     @Column(name = "name")
     public String name;
 
-    @Column(name = "uid")
+    @Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public Long uid;
 
     @Column(name = "screenName")
@@ -75,6 +75,28 @@ public class User extends Model {
 
     public static List<User> recentItems() {
         return new Select().from(User.class).orderBy("uid DESC").limit("300").execute();
+    }
+
+    public static User findOrCreateFromJSON(JSONObject json) {
+        User existingUser = new User();
+        long uId = 0;
+
+        try {
+            uId = json.getLong("id");
+            existingUser = byId(uId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (existingUser != null) {
+            // found and return existing
+            return existingUser;
+        } else {
+            // create and return new user
+            User user = User.fromJSON(json);
+            user.save();
+            return user;
+        }
     }
 
     public static User fromJSON(JSONObject jsonObject) {

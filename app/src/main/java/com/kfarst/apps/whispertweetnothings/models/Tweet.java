@@ -1,9 +1,13 @@
 package com.kfarst.apps.whispertweetnothings.models;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.github.underscore.$;
+import com.github.underscore.Block;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,13 +24,13 @@ import java.util.List;
  * 
  */
 @Table(name = "tweets")
-@Parcel
+@Parcel(analyze={Tweet.class})
 public class Tweet extends Model {
 	// Define table fields
 	@Column(name = "status")
 	private String status = "";
 
-	@Column(name = "uid")
+	@Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
 	private Long uid;
 
 	@Column(name = "createdAt")
@@ -36,7 +40,7 @@ public class Tweet extends Model {
         this.user = user;
     }
 
-    //@Column(name = "user")
+    @Column(name = "user")
     private User user;
 
     @Column(name = "mediaUrl")
@@ -80,6 +84,32 @@ public class Tweet extends Model {
       return new Select().from(Tweet.class).orderBy("uid DESC").limit("300").execute();
     }
 
+    public static Tweet findOrCreateFromJSON(JSONObject json) {
+        Tweet existingTweet = null;
+        long uId = 0;
+
+        try {
+            uId = json.getLong("id");
+            existingTweet = byId(uId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (existingTweet != null) {
+            // found and return existing
+            return existingTweet;
+        } else {
+            // create and return new tweet
+            Tweet tweet = Tweet.fromJSON(json);
+            tweet.save();
+            return tweet;
+        }
+    }
+
+    public static void deleteById(long uid) {
+        new Delete().from(Tweet.class).where("uid = ?", uid).execute();
+    }
+
     // Decodes tweet json into tweet model object
     public static Tweet fromJSON(JSONObject jsonObject) {
        Tweet tweet = new Tweet();
@@ -88,10 +118,10 @@ public class Tweet extends Model {
             tweet.status = jsonObject.getString("text");
             tweet.uid = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
-            tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+            tweet.user = User.findOrCreateFromJSON(jsonObject.getJSONObject("user"));
 
-            JSONObject mediaObj = (JSONObject) jsonObject.getJSONObject("entities").getJSONArray("media").get(0);
-            tweet.mediaUrl = mediaObj.getString("media_url");
+           JSONObject mediaObj = (JSONObject) jsonObject.getJSONObject("entities").getJSONArray("media").get(0);
+           tweet.mediaUrl = mediaObj.getString("media_url");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -103,25 +133,52 @@ public class Tweet extends Model {
     public static ArrayList<Tweet> fromJSON(JSONArray jsonArray) {
         JSONObject tweetJson;
         ArrayList<Tweet> tweets = new ArrayList<Tweet>(jsonArray.length());
-        // Process each result in json array, decode and convert to tweet object
-        for (int i=0; i < jsonArray.length(); i++) {
-            try {
-                tweetJson = jsonArray.getJSONObject(i);
-            } catch (Exception e) {
-                e.printStackTrace();
-                continue;
+
+       ActiveAndroid.beginTransaction();
+       try {
+            // Process each result in json array, decode and convert to tweet object
+            for (int i=0; i < jsonArray.length(); i++) {
+                try {
+                    tweetJson = jsonArray.getJSONObject(i);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    continue;
+                }
+
+                Tweet tweet = findOrCreateFromJSON(tweetJson);
+                if (tweet != null) {
+                    tweets.add(tweet);
+                }
             }
 
-            Tweet tweet = Tweet.fromJSON(tweetJson);
-            if (tweet != null) {
-                tweets.add(tweet);
-            }
+            ActiveAndroid.setTransactionSuccessful();
         }
-
-        return tweets;
+        finally {
+            ActiveAndroid.endTransaction();
+           return tweets;
+        }
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public static void deleteAll() {
+        new Delete().from(Tweet.class).execute();
+    }
+
+    public static void deleteAllById(ArrayList<Tweet> tweets) {
+        ActiveAndroid.beginTransaction();
+        try {
+            $.each(tweets, new Block<Tweet>() {
+                public void apply(Tweet tweet) {
+                    deleteById(tweet.getUid());
+                }
+            });
+            ActiveAndroid.setTransactionSuccessful();
+        }
+        finally {
+            ActiveAndroid.endTransaction();
+        }
     }
 }
