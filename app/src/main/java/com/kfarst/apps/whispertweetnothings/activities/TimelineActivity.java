@@ -238,9 +238,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable("tweet"));
-            tweets.add(0, tweet);
-            adapter.notifyItemInserted(0);
-            lvTweets.scrollToPosition(0);
+
+            if (tweet.getUid() != null) {
+                tweets.add(0, tweet);
+                adapter.notifyItemInserted(0);
+                lvTweets.scrollToPosition(0);
+            }
         }
     }
 
