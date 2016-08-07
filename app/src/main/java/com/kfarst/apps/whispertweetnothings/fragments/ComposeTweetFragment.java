@@ -7,14 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
 import com.codepath.apps.whispertweetnothings.databinding.FragmentComposeTweetBinding;
 import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
-import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.kfarst.apps.whispertweetnothings.models.TweetViewModel;
 import com.kfarst.apps.whispertweetnothings.models.User;
@@ -26,7 +24,6 @@ import org.parceler.Parcels;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class ComposeTweetFragment extends DialogFragment {
@@ -39,6 +36,7 @@ public class ComposeTweetFragment extends DialogFragment {
     private User currentUser;
     private Tweet tweet = new Tweet();
     private static String ARG_RESPONDING_TWEET = "currentUser";
+    private static Integer TOTAL_TWEET_LENGTH = 140;
 
     // TODO: Rename and change types and number of parameters
     public static ComposeTweetFragment newInstance(Tweet respondingTweet) {
@@ -68,7 +66,9 @@ public class ComposeTweetFragment extends DialogFragment {
             respondingTweet = Parcels.unwrap(getArguments().getParcelable(ARG_RESPONDING_TWEET));
 
             if (respondingTweet != null) {
-                binding.getTweetViewModel().getTweet().setStatus("@" + respondingTweet.getUser().getScreenName());
+                String replyHandle = "@" + respondingTweet.getUser().getScreenName() + " ";
+                binding.getTweetViewModel().getTweet().setStatus(replyHandle);
+                binding.getTweetViewModel().charactersRemaining.set(TOTAL_TWEET_LENGTH - replyHandle.length());
             }
         }
 

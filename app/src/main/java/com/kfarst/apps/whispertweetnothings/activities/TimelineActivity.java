@@ -53,6 +53,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     @BindView(R.id.pullToRefresh) PullToRefreshView pullToRefreshView;
 
     public static final int REFRESH_DELAY = 2000;
+    public static final int REQUEST_CODE = 200;
 
     private TwitterClient client = TwitterApplication.getRestClient();
     private ArrayList<Tweet> tweets;
@@ -230,7 +231,17 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setContentIntent(pendingIntent);
 
-        startActivity(tweetIntent);
+        startActivityForResult(tweetIntent, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable("tweet"));
+            tweets.add(0, tweet);
+            adapter.notifyItemInserted(0);
+            lvTweets.scrollToPosition(0);
+        }
     }
 
     public boolean isOnline() {
