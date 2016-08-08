@@ -57,6 +57,8 @@ public class ComposeTweetFragment extends DialogFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_compose_tweet, container, false);
         binding = FragmentComposeTweetBinding.bind(view);
+
+        // Bind view model for observing the number of tweet characters
         binding.setTweetViewModel(new TweetViewModel(tweet));
         ButterKnife.bind(this, view);
 
@@ -65,6 +67,7 @@ public class ComposeTweetFragment extends DialogFragment {
         if (getArguments() != null) {
             respondingTweet = Parcels.unwrap(getArguments().getParcelable(ARG_RESPONDING_TWEET));
 
+            // If responding to a tweet, prepend it with the user's handle who the user is replying to
             if (respondingTweet != null) {
                 String replyHandle = "@" + respondingTweet.getUser().getScreenName() + " ";
                 binding.getTweetViewModel().getTweet().setStatus(replyHandle);
@@ -103,6 +106,7 @@ public class ComposeTweetFragment extends DialogFragment {
     private void getCurrentUser() {
         currentUser = User.byCurrentUser();
 
+        // If currentUser is null we do not have the user persisted, fetch from the API
         if (currentUser == null) {
             TwitterApplication.getRestClient().getCurrentUser(new JsonHttpResponseHandler() {
                 @Override
@@ -122,6 +126,7 @@ public class ComposeTweetFragment extends DialogFragment {
                 }
             });
         } else {
+            // Fetch the profile image since the user is already persisted at this point
             Glide.with(binding.ivOwnProfileImage.getContext())
                     .load(currentUser.getProfileImageUrl())
                     .bitmapTransform(new RoundedCornersTransformation(binding.ivOwnProfileImage.getContext(), 10, 0))

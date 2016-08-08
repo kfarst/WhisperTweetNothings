@@ -64,6 +64,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         public void onClick(View view) {
             Tweet tweet = mTweets.get(getAdapterPosition());
 
+            // Find the selected tweet to render the detail activity
             if (tweet != null) {
                 tweetClickListener.onTweetClick(tweet);
             }
@@ -105,6 +106,8 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         holder.tvUserName.setText(tweet.getUser().getScreenName());
         holder.tvTweetBody.setText(tweet.getStatus());
         holder.tvRelativeTimestamp.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
+
+        // Remove and hide image from item if re-used in the list view until a new image has loaded
         holder.ivMedia.setImageDrawable(null);
         holder.ivMedia.setVisibility(View.GONE);
 

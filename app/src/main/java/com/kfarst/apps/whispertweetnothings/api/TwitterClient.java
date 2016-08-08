@@ -41,6 +41,7 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("format", "json");
 
+		// Allows pagination without pages
 		if (maxID != null) {
 			params.put("max_id", maxID);
 		}

@@ -74,6 +74,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        // Custom toolbar for displaying rounded profile image
         getSupportActionBar().setCustomView(R.layout.actionbar_timeline);
 
         ButterKnife.bind(this);
@@ -86,11 +88,13 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     private void getCurrentUser() {
         currentUser = User.byCurrentUser();
 
+        // If currentUser is null we do not have the user persisted, fetch from the API
         if (currentUser == null) {
             client.getCurrentUser(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     currentUser = User.findOrCreateFromJSON(response);
+                    // Need to set the user to currentUser for next DB query
                     currentUser.setCurrentUser(true);
                     currentUser.save();
 
@@ -107,6 +111,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                 }
             });
         } else {
+            // Fetch the profile image since the user is already persisted at this point
             Glide.with(ivToolbarProfileImage.getContext())
                     .load(currentUser.getProfileImageUrl())
                     .bitmapTransform(new CropCircleTransformation(ivToolbarProfileImage.getContext()))
@@ -153,10 +158,11 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     }
 
     private void populateTimeline(final Long maxId) {
+        // If not online and no tweets loaded, fetch them from the database
         if (!isOnline() && tweets.size() == 0) {
             tweets.addAll(Tweet.recentItems());
             adapter.notifyDataSetChanged();
-            Snackbar offlineSnackbar = Snackbar.make(lvTweets, "You are currently offline and will not be able to update or post to your timeline.", Snackbar.LENGTH_LONG);
+            Snackbar offlineSnackbar = Snackbar.make(lvTweets, R.string.offline_warning_message, Snackbar.LENGTH_LONG);
             ColoredSnackBar.warning(offlineSnackbar).show();
         }
 
@@ -165,6 +171,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 ArrayList<Tweet> list = new ArrayList<Tweet>();
 
+                // No maxId clears the DB of tweets and adds new tweets from the refreshed timeline
+                // so a large number of tweets is not built up over time
                 if (maxId == null) {
                     Tweet.deleteAll();
                     tweets.clear();
@@ -178,7 +186,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Snackbar errorSnackbar = Snackbar.make(lvTweets, R.string.offline_message, Snackbar.LENGTH_SHORT);
+                Snackbar errorSnackbar = Snackbar.make(lvTweets, R.string.offline_error_message, Snackbar.LENGTH_SHORT);
                 ColoredSnackBar.alert(errorSnackbar).show();
             }
         });
@@ -197,10 +205,14 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         client.postStatus(tweet, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // New tweet has been composed, add to the timeline
                 tweets.add(0, Tweet.fromJSON(response));
                 adapter.notifyItemInserted(0);
+
+                // Scroll to top of timeline to see new composed tweet
                 lvTweets.scrollToPosition(0);
-                Snackbar snackbar = Snackbar.make(lvTweets, "Status successfully tweeted.", Snackbar.LENGTH_SHORT);
+
+                Snackbar snackbar = Snackbar.make(lvTweets, R.string.tweet_success_message, Snackbar.LENGTH_SHORT);
                 ColoredSnackBar.confirm(snackbar).show();
             }
 
@@ -208,6 +220,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 String errorMessage = getErrorsFromResponse(errorResponse);
 
+                // If API returns errors, show them to the user
                 if (!TextUtils.isEmpty(errorMessage)) {
                     Snackbar snackbar = Snackbar.make(lvTweets, errorMessage, Snackbar.LENGTH_SHORT);
                     ColoredSnackBar.alert(snackbar).show();
@@ -227,6 +240,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
                     e.printStackTrace();
                 }
 
+                // Concatenate errors into one string separated by a space
                 return TextUtils.join(" ", errorString);
             }
         });
@@ -236,6 +250,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     public void onTweetClick(final Tweet tweet) {
         Intent tweetIntent = new Intent(this, TweetActivity.class);
         tweetIntent.putExtra("tweet", Parcels.wrap(tweet));
+
+        // If offline do not allow user to reply to a tweet
         tweetIntent.putExtra("isOnline", timelineViewModel.isOnline.get());
 
         PendingIntent pendingIntent =
@@ -256,6 +272,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable("tweet"));
 
+            // New tweet is always created, so only add to timeline if it has been posted to the API
             if (tweet.getUid() != null) {
                 tweets.add(0, tweet);
                 adapter.notifyItemInserted(0);

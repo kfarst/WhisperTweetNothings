@@ -9,7 +9,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_tweet">TweetActivity</string>
-    <string name="offline_message">Cannot retrieve messages at this time. Please try again later.</string>
+    <string name="offline_error_message">Cannot retrieve messages at this time. Please try again later.</string>
     <string name="tweet_success">Status successfully tweeted.</string>
+    <string name="offline_warning_message">You are currently offline and will not be able to update or post to your timeline.</string>
+    <string name="tweet_success_message">Status successfully tweeted.</string>
 
 </resources>

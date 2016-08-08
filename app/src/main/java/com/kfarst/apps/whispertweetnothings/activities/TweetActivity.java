@@ -62,6 +62,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Tweet");
 
+        // Color back arrow with Twitter blue
         final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(getResources().getColor(R.color.twitter_blue), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
@@ -70,6 +71,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
 
         ButterKnife.bind(this);
 
+        // If offline hide the tweet reply button
         if (getIntent().getBooleanExtra("isOnline", false)) {
             ivTweetReply.setVisibility(View.VISIBLE);
             bottomDivider.setVisibility(View.VISIBLE);
@@ -99,6 +101,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivTweetMedia);
 
+            // Hide image view by default, only show if an image was attached to the tweet
             ivTweetMedia.setVisibility(View.VISIBLE);
         }
     }
@@ -114,6 +117,8 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
     @Override
     public void onBackPressed() {
         Intent returnIntent = new Intent();
+
+        // Return the tweet to check if it has been posted as a reply
         returnIntent.putExtra("tweet", Parcels.wrap(tweet));
         returnIntent.putExtra("code", REQUEST_CODE);
         setResult(RESULT_OK, returnIntent);
@@ -134,6 +139,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 String errorMessage = getErrorsFromResponse(errorResponse);
 
+                // If API errors, show them to the user
                 if (!TextUtils.isEmpty(errorMessage)) {
                     Snackbar snackbar = Snackbar.make(activityView, errorMessage, Snackbar.LENGTH_SHORT);
                     ColoredSnackBar.alert(snackbar).show();
@@ -153,6 +159,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
                     e.printStackTrace();
                 }
 
+                // Concatenate errors into one string separated by a space
                 return TextUtils.join(" ", errorString);
             }
         });
