@@ -43,6 +43,8 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
     @BindView(R.id.tvTweetDetailStatus) LinkifiedTextView tvTweetDetailStatus;
     @BindView(R.id.ivTweetMedia) ImageView ivTweetMedia;
     @BindView(R.id.tvRetweetCount) TextView tvRetweetCount;
+    @BindView(R.id.ivTweetReply) ImageView ivTweetReply;
+    @BindView(R.id.divider3) View bottomDivider;
 
     public static final int REQUEST_CODE = 200;
 
@@ -67,6 +69,14 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
         tweet = Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
 
         ButterKnife.bind(this);
+
+        if (getIntent().getBooleanExtra("isOnline", false)) {
+            ivTweetReply.setVisibility(View.VISIBLE);
+            bottomDivider.setVisibility(View.VISIBLE);
+        } else {
+            ivTweetReply.setVisibility(View.GONE);
+            bottomDivider.setVisibility(View.GONE);
+        }
 
         setupViews();
     }

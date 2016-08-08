@@ -3,6 +3,7 @@ package com.kfarst.apps.whispertweetnothings.activities;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -19,10 +20,12 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
+import com.codepath.apps.whispertweetnothings.databinding.ActivityTimelineBinding;
 import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
 import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
 import com.kfarst.apps.whispertweetnothings.fragments.ComposeTweetFragment;
+import com.kfarst.apps.whispertweetnothings.models.TimelineViewModel;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.kfarst.apps.whispertweetnothings.models.User;
 import com.kfarst.apps.whispertweetnothings.support.ColoredSnackBar;
@@ -59,11 +62,14 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     private ArrayList<Tweet> tweets;
     private TweetsArrayAdapter adapter;
     private User currentUser;
+    private TimelineViewModel timelineViewModel = new TimelineViewModel();
+    private ActivityTimelineBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
+        binding.setTimelineViewModel(timelineViewModel);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -230,6 +236,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     public void onTweetClick(final Tweet tweet) {
         Intent tweetIntent = new Intent(this, TweetActivity.class);
         tweetIntent.putExtra("tweet", Parcels.wrap(tweet));
+        tweetIntent.putExtra("isOnline", timelineViewModel.isOnline.get());
 
         PendingIntent pendingIntent =
                 TaskStackBuilder.create(this)
@@ -262,9 +269,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         try {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
+            timelineViewModel.isOnline.set(exitValue == 0);
+            return timelineViewModel.isOnline.get();
         } catch (IOException e)          { e.printStackTrace(); }
         catch (InterruptedException e) { e.printStackTrace(); }
-        return false;
+
+        timelineViewModel.isOnline.set(false);
+        return timelineViewModel.isOnline.get();
     }
 }
