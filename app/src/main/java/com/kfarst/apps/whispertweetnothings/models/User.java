@@ -33,6 +33,9 @@ public class User extends Model {
     @Column(name = "profileImageUrl")
     public String profileImageUrl;
 
+    @Column(name = "currentUser")
+    public boolean currentUser;
+
     public User() {
         super();
     }
@@ -68,9 +71,21 @@ public class User extends Model {
         return profileImageUrl;
     }
 
+    public boolean isCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(boolean currentUser) {
+        this.currentUser = currentUser;
+    }
+
     // Record Finders
     public static User byId(long uid) {
         return new Select().from(User.class).where("uid = ?", uid).executeSingle();
+    }
+
+    public static User byCurrentUser() {
+        return new Select().from(User.class).where("currentUser = ?", true).executeSingle();
     }
 
     public static List<User> recentItems() {

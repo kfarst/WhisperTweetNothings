@@ -101,22 +101,32 @@ public class ComposeTweetFragment extends DialogFragment {
     }
 
     private void getCurrentUser() {
-        TwitterApplication.getRestClient().getCurrentUser(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                currentUser = User.findOrCreateFromJSON(response);
+        currentUser = User.byCurrentUser();
 
-                Glide.with(binding.ivOwnProfileImage.getContext())
-                        .load(currentUser.getProfileImageUrl())
-                        .bitmapTransform(new RoundedCornersTransformation(binding.ivOwnProfileImage.getContext(), 10, 0))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.ivOwnProfileImage);
-            }
+        if (currentUser == null) {
+            TwitterApplication.getRestClient().getCurrentUser(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    currentUser = User.findOrCreateFromJSON(response);
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
-            }
-        });
+                    Glide.with(binding.ivOwnProfileImage.getContext())
+                            .load(currentUser.getProfileImageUrl())
+                            .bitmapTransform(new RoundedCornersTransformation(binding.ivOwnProfileImage.getContext(), 10, 0))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(binding.ivOwnProfileImage);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                }
+            });
+        } else {
+            Glide.with(binding.ivOwnProfileImage.getContext())
+                    .load(currentUser.getProfileImageUrl())
+                    .bitmapTransform(new RoundedCornersTransformation(binding.ivOwnProfileImage.getContext(), 10, 0))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(binding.ivOwnProfileImage);
+        }
     }
 }

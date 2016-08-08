@@ -73,30 +73,40 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         ButterKnife.bind(this);
 
         setupViews();
-        if (isOnline()) {
-            getCurrentUser();
-        }
+        getCurrentUser();
         populateTimeline(null);
     }
 
     private void getCurrentUser() {
-        client.getCurrentUser(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                currentUser = User.findOrCreateFromJSON(response);
+        currentUser = User.byCurrentUser();
 
-                Glide.with(ivToolbarProfileImage.getContext())
-                        .load(currentUser.getProfileImageUrl())
-                        .bitmapTransform(new CropCircleTransformation(ivToolbarProfileImage.getContext()))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(ivToolbarProfileImage);
-            }
+        if (currentUser == null) {
+            client.getCurrentUser(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    currentUser = User.findOrCreateFromJSON(response);
+                    currentUser.setCurrentUser(true);
+                    currentUser.save();
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
-            }
-        });
+                    Glide.with(ivToolbarProfileImage.getContext())
+                            .load(currentUser.getProfileImageUrl())
+                            .bitmapTransform(new CropCircleTransformation(ivToolbarProfileImage.getContext()))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(ivToolbarProfileImage);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                }
+            });
+        } else {
+            Glide.with(ivToolbarProfileImage.getContext())
+                    .load(currentUser.getProfileImageUrl())
+                    .bitmapTransform(new CropCircleTransformation(ivToolbarProfileImage.getContext()))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ivToolbarProfileImage);
+        }
     }
 
     private void setupViews() {
