@@ -50,7 +50,22 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://d17oy1vhnax1f7.cloudfront.net/items/3O003r33181U3m421D1i/walkthrough.gif?v=8bb48f0f' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+**Login and Posting a Tweet**
+
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/1q2G010K2a3j1F2i2Z09/walkthrough1.gif?v=3efc1d4d' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+**Offline Capabilities**
+
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/372H0A33012r3o1P043c/walkthrough2.gif?v=393c5227' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+**Replying to a Tweet**
+
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/1t3d2P321P0o351a2n09/walkthrough3.gif?v=3f031ca1' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+**Clicking Links in Tweets**
+
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/3N15183M0E3q3b100q41/walkthrough4.gif?v=b08170f6' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
