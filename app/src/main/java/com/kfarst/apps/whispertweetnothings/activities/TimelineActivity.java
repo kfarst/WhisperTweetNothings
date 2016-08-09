@@ -254,16 +254,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         // If offline do not allow user to reply to a tweet
         tweetIntent.putExtra("isOnline", timelineViewModel.isOnline.get());
 
-        PendingIntent pendingIntent =
-                TaskStackBuilder.create(this)
-                        // add all of DetailsActivity's parents to the stack,
-                        // followed by DetailsActivity itself
-                        .addNextIntentWithParentStack(tweetIntent)
-                        .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentIntent(pendingIntent);
-
         startActivityForResult(tweetIntent, REQUEST_CODE);
     }
 

@@ -43,6 +43,7 @@
         <activity
             android:name="com.kfarst.apps.whispertweetnothings.activities.TimelineActivity"
             android:label="@string/title_activity_timeline"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.kfarst.apps.whispertweetnothings.activities.TweetActivity"
