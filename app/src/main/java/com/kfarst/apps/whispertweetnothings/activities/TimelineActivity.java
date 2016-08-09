@@ -1,7 +1,5 @@
 package com.kfarst.apps.whispertweetnothings.activities;
 
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,8 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,11 +25,7 @@ import com.kfarst.apps.whispertweetnothings.models.TimelineViewModel;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.kfarst.apps.whispertweetnothings.models.User;
 import com.kfarst.apps.whispertweetnothings.support.ColoredSnackBar;
-import com.kfarst.apps.whispertweetnothings.support.DividerItemDecoration;
-import com.kfarst.apps.whispertweetnothings.support.EndlessRecyclerViewScrollListener;
-import com.kfarst.apps.whispertweetnothings.support.SmoothScrollLinearLayoutManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.yalantis.taurus.PullToRefreshView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,16 +43,12 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.PostStatusDialogListener, TweetsArrayAdapter.OnTweetClickListener {
 
-    @BindView(R.id.lvTweets) RecyclerView lvTweets;
     @BindView(R.id.ivToolbarProfileImage) ImageView ivToolbarProfileImage;
-    @BindView(R.id.pullToRefresh) PullToRefreshView pullToRefreshView;
 
     public static final int REFRESH_DELAY = 2000;
     public static final int REQUEST_CODE = 200;
 
     private TwitterClient client = TwitterApplication.getRestClient();
-    private ArrayList<Tweet> tweets;
-    private TweetsArrayAdapter adapter;
     private User currentUser;
     private TimelineViewModel timelineViewModel = new TimelineViewModel();
     private ActivityTimelineBinding binding;
@@ -82,7 +70,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
 
         setupViews();
         getCurrentUser();
-        populateTimeline(null);
     }
 
     private void getCurrentUser() {
@@ -121,76 +108,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     }
 
     private void setupViews() {
-        lvTweets.setHasFixedSize(true);
 
-        SmoothScrollLinearLayoutManager linearLayoutManager = new SmoothScrollLinearLayoutManager(this);
-        lvTweets.setLayoutManager(linearLayoutManager);
-
-        lvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
-                populateTimeline(tweets.get(tweets.size() - 1).getUid());
-
-            }
-        });
-
-        lvTweets.addItemDecoration(new DividerItemDecoration(this));
-
-        tweets = new ArrayList<Tweet>();
-        adapter = new TweetsArrayAdapter(tweets);
-        adapter.setOnTweetClickListener(this);
-        lvTweets.setAdapter(adapter);
-
-        pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                pullToRefreshView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        populateTimeline(null);
-                        pullToRefreshView.setRefreshing(false);
-                    }
-                }, REFRESH_DELAY);
-            }
-        });
-    }
-
-    private void populateTimeline(final Long maxId) {
-        // If not online and no tweets loaded, fetch them from the database
-        if (!isOnline() && tweets.size() == 0) {
-            tweets.addAll(Tweet.recentItems());
-            adapter.notifyDataSetChanged();
-            Snackbar offlineSnackbar = Snackbar.make(lvTweets, R.string.offline_warning_message, Snackbar.LENGTH_LONG);
-            ColoredSnackBar.warning(offlineSnackbar).show();
-        }
-
-        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                ArrayList<Tweet> list = new ArrayList<Tweet>();
-
-                // No maxId clears the DB of tweets and adds new tweets from the refreshed timeline
-                // so a large number of tweets is not built up over time
-                if (maxId == null) {
-                    Tweet.deleteAll();
-                    tweets.clear();
-                    pullToRefreshView.setRefreshing(false);
-                }
-
-                tweets.addAll(Tweet.fromJSON(response));
-                adapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Snackbar errorSnackbar = Snackbar.make(lvTweets, R.string.offline_error_message, Snackbar.LENGTH_SHORT);
-                ColoredSnackBar.alert(errorSnackbar).show();
-            }
-        });
-    }
+   }
 
     @OnClick(R.id.fabCompose)
     public void openComposeDialog(View view) {

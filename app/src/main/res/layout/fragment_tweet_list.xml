@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <com.yalantis.taurus.PullToRefreshView
+        android:id="@+id/pullToRefresh"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lvTweets"
+            android:background="@android:color/white"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="?android:attr/dividerHeight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.yalantis.taurus.PullToRefreshView>
+
+</FrameLayout>
