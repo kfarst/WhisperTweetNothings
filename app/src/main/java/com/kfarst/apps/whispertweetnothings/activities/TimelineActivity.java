@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
 import com.codepath.apps.whispertweetnothings.databinding.ActivityTimelineBinding;
+import com.kfarst.apps.whispertweetnothings.adapters.TimelineFragmentPagerAdapter;
 import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
 import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
@@ -41,9 +44,11 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.PostStatusDialogListener, TweetsArrayAdapter.OnTweetClickListener {
+public class TimelineActivity extends AppCompatActivity /*implements ComposeTweetFragment.PostStatusDialogListener, TweetsArrayAdapter.OnTweetClickListener*/ {
 
     @BindView(R.id.ivToolbarProfileImage) ImageView ivToolbarProfileImage;
+    @BindView(R.id.viewpager) ViewPager viewPager;
+    @BindView(R.id.sliding_tabs) TabLayout slidingTabs;
 
     public static final int REFRESH_DELAY = 2000;
     public static final int REQUEST_CODE = 200;
@@ -108,7 +113,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     }
 
     private void setupViews() {
-
+        viewPager.setAdapter(new TimelineFragmentPagerAdapter(getSupportFragmentManager(),
+                TimelineActivity.this));
+        slidingTabs.setupWithViewPager(viewPager);
    }
 
     @OnClick(R.id.fabCompose)
@@ -119,76 +126,76 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         composeDialog.show(fm, "fragment_compose_tweet");
     }
 
-    @Override
-    public void onFinishEditDialog(Tweet tweet) {
-        client.postStatus(tweet, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // New tweet has been composed, add to the timeline
-                tweets.add(0, Tweet.fromJSON(response));
-                adapter.notifyItemInserted(0);
+    //@Override
+    //public void onFinishEditDialog(Tweet tweet) {
+    //    client.postStatus(tweet, new JsonHttpResponseHandler() {
+    //        @Override
+    //        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+    //            // New tweet has been composed, add to the timeline
+    //            tweets.add(0, Tweet.fromJSON(response));
+    //            adapter.notifyItemInserted(0);
 
-                // Scroll to top of timeline to see new composed tweet
-                lvTweets.scrollToPosition(0);
+    //            // Scroll to top of timeline to see new composed tweet
+    //            lvTweets.scrollToPosition(0);
 
-                Snackbar snackbar = Snackbar.make(lvTweets, R.string.tweet_success_message, Snackbar.LENGTH_SHORT);
-                ColoredSnackBar.confirm(snackbar).show();
-            }
+    //            Snackbar snackbar = Snackbar.make(lvTweets, R.string.tweet_success_message, Snackbar.LENGTH_SHORT);
+    //            ColoredSnackBar.confirm(snackbar).show();
+    //        }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                String errorMessage = getErrorsFromResponse(errorResponse);
+    //        @Override
+    //        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+    //            String errorMessage = getErrorsFromResponse(errorResponse);
 
-                // If API returns errors, show them to the user
-                if (!TextUtils.isEmpty(errorMessage)) {
-                    Snackbar snackbar = Snackbar.make(lvTweets, errorMessage, Snackbar.LENGTH_SHORT);
-                    ColoredSnackBar.alert(snackbar).show();
-                }
-            }
+    //            // If API returns errors, show them to the user
+    //            if (!TextUtils.isEmpty(errorMessage)) {
+    //                Snackbar snackbar = Snackbar.make(lvTweets, errorMessage, Snackbar.LENGTH_SHORT);
+    //                ColoredSnackBar.alert(snackbar).show();
+    //            }
+    //        }
 
-            public String getErrorsFromResponse(JSONObject errorResponse) {
-                ArrayList<String> errorString = new ArrayList<String>();
+    //        public String getErrorsFromResponse(JSONObject errorResponse) {
+    //            ArrayList<String> errorString = new ArrayList<String>();
 
-                try {
-                    JSONArray errors = errorResponse.getJSONArray("errors");
+    //            try {
+    //                JSONArray errors = errorResponse.getJSONArray("errors");
 
-                    for (int i = 0; i < errors.length(); i++) {
-                        errorString.add(String.valueOf(errors.getJSONObject(i).get("message")));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+    //                for (int i = 0; i < errors.length(); i++) {
+    //                    errorString.add(String.valueOf(errors.getJSONObject(i).get("message")));
+    //                }
+    //            } catch (JSONException e) {
+    //                e.printStackTrace();
+    //            }
 
-                // Concatenate errors into one string separated by a space
-                return TextUtils.join(" ", errorString);
-            }
-        });
-    }
+    //            // Concatenate errors into one string separated by a space
+    //            return TextUtils.join(" ", errorString);
+    //        }
+    //    });
+    //}
 
-    @Override
-    public void onTweetClick(final Tweet tweet) {
-        Intent tweetIntent = new Intent(this, TweetActivity.class);
-        tweetIntent.putExtra("tweet", Parcels.wrap(tweet));
+    //@Override
+    //public void onTweetClick(final Tweet tweet) {
+    //    Intent tweetIntent = new Intent(this, TweetActivity.class);
+    //    tweetIntent.putExtra("tweet", Parcels.wrap(tweet));
 
-        // If offline do not allow user to reply to a tweet
-        tweetIntent.putExtra("isOnline", timelineViewModel.isOnline.get());
+    //    // If offline do not allow user to reply to a tweet
+    //    tweetIntent.putExtra("isOnline", timelineViewModel.isOnline.get());
 
-        startActivityForResult(tweetIntent, REQUEST_CODE);
-    }
+    //    startActivityForResult(tweetIntent, REQUEST_CODE);
+    //}
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable("tweet"));
+   //@Override
+   //protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+   //    if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+   //        Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable("tweet"));
 
-            // New tweet is always created, so only add to timeline if it has been posted to the API
-            if (tweet.getUid() != null) {
-                tweets.add(0, tweet);
-                adapter.notifyItemInserted(0);
-                lvTweets.scrollToPosition(0);
-            }
-        }
-    }
+   //        // New tweet is always created, so only add to timeline if it has been posted to the API
+   //        if (tweet.getUid() != null) {
+   //            tweets.add(0, tweet);
+   //            adapter.notifyItemInserted(0);
+   //            lvTweets.scrollToPosition(0);
+   //        }
+   //    }
+  //}
 
     public boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();

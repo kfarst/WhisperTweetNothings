@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="timelineViewModel"  type="com.kfarst.apps.whispertweetnothings.models.TimelineViewModel"></variable>
         <import type="android.view.View" />
     </data>
     <android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:fitsSystemWindows="true"
-        tools:context="com.kfarst.apps.whispertweetnothings.activities.TimelineActivity"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -27,18 +24,26 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/sliding_tabs"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabMode="scrollable" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:background="@android:color/white" />
+            <android.support.design.widget.TabLayout
+                android:id="@+id/sliding_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="?android:attr/actionBarSize"
+                app:tabMode="scrollable" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sliding_tabs"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabCompose"
@@ -48,7 +53,7 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:visibility="@{timelineViewModel.isOnline ? View.VISIBLE : View.GONE}"
-            app:layout_anchor="@id/lvTweets"
+            app:layout_anchor="@id/viewpager"
             app:layout_anchorGravity="bottom|right|end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

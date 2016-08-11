@@ -32,7 +32,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     public interface OnTweetClickListener {
        void onTweetClick(Tweet tweet);
     }
-    private static List<Tweet> mTweets;
+    public List<Tweet> mTweets;
     private AdapterView.OnItemClickListener listener;
     private static OnTweetClickListener tweetClickListener;
 
@@ -43,7 +43,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
         @BindView(R.id.tvUserName) TextView tvUserName;
         @BindView(R.id.tvTweetBody) LinkifiedTextView tvTweetBody;

@@ -1,8 +1,13 @@
 package com.kfarst.apps.whispertweetnothings.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.codepath.apps.whispertweetnothings.R;
 import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
@@ -29,8 +34,8 @@ public abstract class TweetsListFragment extends Fragment {
     @BindView(R.id.lvTweets) RecyclerView lvTweets;
     @BindView(R.id.pullToRefresh) PullToRefreshView pullToRefreshView;
 
-    public static final int REFRESH_DELAY = 2000;
-    public static final int REQUEST_CODE = 200;
+    protected static final int REFRESH_DELAY = 2000;
+    protected static final int REQUEST_CODE = 200;
 
     protected TwitterClient client = TwitterApplication.getRestClient();
     protected ArrayList<Tweet> tweets;
@@ -40,18 +45,25 @@ public abstract class TweetsListFragment extends Fragment {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
-        ButterKnife.bind(this);
-
-        setupViews();
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_tweet_list, container, false);
+        ButterKnife.bind(this, view);
+        setupViews(view);
+        return view;
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        populateTimeline(null);
+    }
 
-    public void setupViews() {
+    protected void setupViews(View view) {
         lvTweets.setHasFixedSize(true);
 
-        SmoothScrollLinearLayoutManager linearLayoutManager = new SmoothScrollLinearLayoutManager(this);
+        SmoothScrollLinearLayoutManager linearLayoutManager = new SmoothScrollLinearLayoutManager(view.getContext());
         lvTweets.setLayoutManager(linearLayoutManager);
 
         lvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -64,11 +76,11 @@ public abstract class TweetsListFragment extends Fragment {
             }
         });
 
-        lvTweets.addItemDecoration(new DividerItemDecoration(this));
+        lvTweets.addItemDecoration(new DividerItemDecoration(view.getContext()));
 
         tweets = new ArrayList<Tweet>();
         adapter = new TweetsArrayAdapter(tweets);
-        adapter.setOnTweetClickListener(this);
+        //adapter.setOnTweetClickListener(view.getContext());
         lvTweets.setAdapter(adapter);
 
         pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
@@ -85,10 +97,12 @@ public abstract class TweetsListFragment extends Fragment {
         });
     }
 
-    public void appendTweets(List<Tweet> tweets) {
+    protected void appendTweets(List<Tweet> newTweets) {
         // add tweets to the adapter
+        tweets.addAll(newTweets);
+        adapter.notifyDataSetChanged();
     }
 
     // Abstract method to be overridden
-    protected abstract void populateTimeline(long maxId);
+    protected abstract void populateTimeline(Long maxId);
 }

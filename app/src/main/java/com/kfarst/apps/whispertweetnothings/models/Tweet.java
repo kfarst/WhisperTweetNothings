@@ -133,8 +133,17 @@ public class Tweet extends Model {
             tweet.retweetCount = jsonObject.getInt("retweet_count");
             tweet.user = User.findOrCreateFromJSON(jsonObject.getJSONObject("user"));
 
-           JSONObject mediaObj = (JSONObject) jsonObject.getJSONObject("entities").getJSONArray("media").get(0);
-           tweet.mediaUrl = mediaObj.getString("media_url");
+            JSONObject entitiesObj = (JSONObject) jsonObject.optJSONObject("entities");
+            JSONArray mediaObj;
+
+            if (entitiesObj != null) {
+                mediaObj = entitiesObj.optJSONArray("media");
+
+                if (mediaObj != null) {
+                    JSONObject media = (JSONObject) mediaObj.get(0);
+                    tweet.mediaUrl = media.getString("media_url");
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

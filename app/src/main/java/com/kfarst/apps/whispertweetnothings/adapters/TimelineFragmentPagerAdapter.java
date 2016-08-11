@@ -12,8 +12,8 @@ import com.kfarst.apps.whispertweetnothings.fragments.MentionsTimelineFragment;
  * Created by kfarst on 8/9/16.
  */
 public class TimelineFragmentPagerAdapter extends FragmentPagerAdapter {
-    final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[] { "Tab1", "Tab2", "Tab3" };
+    final int PAGE_COUNT = 2;
+    private String tabTitles[] = new String[] { "Home", "Mentions" };
     private Context context;
 
     public TimelineFragmentPagerAdapter(FragmentManager fm, Context context) {
