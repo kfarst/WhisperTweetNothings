@@ -1,6 +1,7 @@
 package com.kfarst.apps.whispertweetnothings.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -12,8 +13,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
+import com.kfarst.apps.whispertweetnothings.activities.UserProfileActivity;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.kfarst.apps.whispertweetnothings.support.LinkifiedTextView;
+
+import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +41,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
         @BindView(R.id.tvUserName) TextView tvUserName;
         @BindView(R.id.tvTweetBody) LinkifiedTextView tvTweetBody;
@@ -50,6 +54,13 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent i = new Intent(view.getContext(), UserProfileActivity.class);
+            i.putExtra("tweet", Parcels.wrap(mTweets.get(getAdapterPosition())));
+            view.getContext().startActivity(i);
         }
     }
 
@@ -73,6 +84,8 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         Tweet tweet = mTweets.get(position);
 
         holder.ivProfileImage.setImageResource(android.R.color.darker_gray);
+
+        holder.ivProfileImage.setOnClickListener(holder);
 
         Glide.with(holder.itemView.getContext())
                 .load(tweet.getUser().getProfileImageUrl())
