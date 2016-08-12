@@ -28,4 +28,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.Widget.TextView.Bold" parent="android:Widget.Holo.Light.TextView">
+        <item name="fontPath">fonts/HelveticaNeue-Medium.ttf</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AppTheme.Widget.TextView.Bold.Medium" parent="android:Widget.Holo.Light.TextView">
+        <item name="fontPath">fonts/HelveticaNeue-Medium.ttf</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>

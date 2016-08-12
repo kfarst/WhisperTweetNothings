@@ -1,5 +1,6 @@
 package com.kfarst.apps.whispertweetnothings.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -35,6 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TweetActivity extends AppCompatActivity implements ComposeTweetFragment.PostStatusDialogListener {
     @BindView(R.id.ivTweetProfileImage) ImageView ivTweetProfileImage;
@@ -55,7 +57,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityView = LayoutInflater.from(getBaseContext()).inflate(R.layout.activity_tweet, null);
+        activityView = LayoutInflater.from(this).inflate(R.layout.activity_tweet, null);
         setContentView(activityView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -166,5 +168,10 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
                 return TextUtils.join(" ", errorString);
             }
         });
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

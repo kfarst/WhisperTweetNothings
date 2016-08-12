@@ -1,5 +1,6 @@
 package com.kfarst.apps.whispertweetnothings.activities;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -33,6 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TimelineActivity extends AppCompatActivity /*implements ComposeTweetFragment.PostStatusDialogListener*/ {
 
@@ -188,5 +190,10 @@ public class TimelineActivity extends AppCompatActivity /*implements ComposeTwee
 
         timelineViewModel.isOnline.set(false);
         return timelineViewModel.isOnline.get();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

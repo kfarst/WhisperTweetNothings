@@ -13,13 +13,11 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <ImageView
-                android:id="@+id/image"
+                android:id="@+id/ivUserProfileBackground"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/parallax_image_height"
-                android:scaleType="centerCrop"
-                android:src="@drawable/example" />
+                android:scaleType="centerCrop" />
 
             <View
                 android:id="@+id/anchor"
@@ -28,16 +26,84 @@
                 android:minHeight="@dimen/parallax_image_height" />
 
             <TextView
-                android:id="@+id/body"
-                android:layout_width="match_parent"
+                android:id="@+id/tvUserProfileName"
+                android:textAppearance="@style/AppTheme.Widget.TextView.Bold.Medium"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/anchor"
-                android:background="@android:color/white"
-                android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:text="Lorem ipsum" />
+                android:paddingTop="64dp" />
+
+            <TextView
+                android:id="@+id/tvUserProfileHandle"
+                android:layout_below="@+id/tvUserProfileName"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvUserProfileDescription"
+                android:layout_below="@+id/tvUserProfileHandle"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:layout_below="@+id/tvUserProfileDescription"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvUserProfileFollowingCount"
+                    android:textAppearance="@style/AppTheme.Widget.TextView.Bold"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvUserProfileFollowingLabel"
+                    android:text="FOLLOWING"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/tvUserProfileFollowingCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvUserProfileFollowersCount"
+                    android:textAppearance="@style/AppTheme.Widget.TextView.Bold"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_toRightOf="@+id/tvUserProfileFollowingLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvUserProfileFollowersLabel"
+                    android:text="FOLLOWERS"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/tvUserProfileFollowersCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/ivUserProfileImage"
+                android:layout_marginTop="-32.5dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:scaleType="fitCenter"
+                android:background="@drawable/white_border"
+                android:layout_below="@+id/ivUserProfileBackground" />
+
         </RelativeLayout>
 
     </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>

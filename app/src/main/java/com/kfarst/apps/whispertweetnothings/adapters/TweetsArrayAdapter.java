@@ -59,7 +59,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         @Override
         public void onClick(View view) {
             Intent i = new Intent(view.getContext(), UserProfileActivity.class);
-            i.putExtra("tweet", Parcels.wrap(mTweets.get(getAdapterPosition())));
+            i.putExtra("user", Parcels.wrap(mTweets.get(getAdapterPosition()).getUser()));
             view.getContext().startActivity(i);
         }
     }

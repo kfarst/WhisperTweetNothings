@@ -39,6 +39,15 @@ public class User extends Model {
     @Column(name = "currentUser")
     public boolean currentUser;
 
+    @Column(name = "friendsCount")
+    public Integer friendsCount;
+
+    @Column(name = "followersCount")
+    public Integer followersCount;
+
+    @Column(name = "description")
+    public String description;
+
     public User() {
         super();
     }
@@ -52,6 +61,10 @@ public class User extends Model {
             this.uid = object.getLong("id");
             this.screenName = object.getString("screen_name");
             this.profileImageUrl = object.getString("profile_image_url");
+            this.description = object.getString("description");
+            this.profileBackgroundImageUrl = object.optString("profile_background_image_url");
+            this.friendsCount = object.getInt("friends_count");
+            this.followersCount = object.getInt("followers_count");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -82,13 +95,36 @@ public class User extends Model {
         this.profileBackgroundImageUrl = profileBackgroundImageUrl;
     }
 
-
     public boolean isCurrentUser() {
         return currentUser;
     }
 
     public void setCurrentUser(boolean currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public Integer getFriendsCount() {
+        return friendsCount;
+    }
+
+    public void setFriendsCount(Integer friendsCount) {
+        this.friendsCount = friendsCount;
+    }
+
+    public Integer getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(Integer followersCount) {
+        this.followersCount = followersCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     // Record Finders
@@ -133,8 +169,11 @@ public class User extends Model {
             user.name = jsonObject.getString("name");
             user.uid = jsonObject.getLong("id");
             user.screenName = jsonObject.getString("screen_name");
+            user.description = jsonObject.getString("description");
             user.profileImageUrl = jsonObject.getString("profile_image_url");
             user.profileBackgroundImageUrl = jsonObject.optString("profile_background_image_url");
+            user.friendsCount = jsonObject.getInt("friends_count");
+            user.followersCount = jsonObject.getInt("followers_count");
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,7 @@
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:textAppearance="@style/AppTheme.Widget.TextView.Bold"
         android:textColor="@android:color/white"
         android:textSize="32sp" />
 
