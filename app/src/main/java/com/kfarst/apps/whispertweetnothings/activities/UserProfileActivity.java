@@ -3,6 +3,7 @@ package com.kfarst.apps.whispertweetnothings.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.codepath.apps.whispertweetnothings.R;
@@ -25,6 +26,8 @@ public class UserProfileActivity extends AppCompatActivity implements Observable
         setContentView(R.layout.activity_user_profile);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mImageView = findViewById(R.id.image);
         mToolbarView = findViewById(R.id.toolbar);
@@ -56,5 +59,11 @@ public class UserProfileActivity extends AppCompatActivity implements Observable
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return super.onOptionsItemSelected(item);
     }
 }

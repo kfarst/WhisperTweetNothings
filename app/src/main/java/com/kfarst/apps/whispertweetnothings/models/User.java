@@ -33,6 +33,9 @@ public class User extends Model {
     @Column(name = "profileImageUrl")
     public String profileImageUrl;
 
+    @Column(name = "profileBackgroundImageUrl")
+    public String profileBackgroundImageUrl;
+
     @Column(name = "currentUser")
     public boolean currentUser;
 
@@ -70,6 +73,15 @@ public class User extends Model {
     public String getProfileImageUrl() {
         return profileImageUrl;
     }
+
+    public String getProfileBackgroundImageUrl() {
+        return profileBackgroundImageUrl;
+    }
+
+    public void setProfileBackgroundImageUrl(String profileBackgroundImageUrl) {
+        this.profileBackgroundImageUrl = profileBackgroundImageUrl;
+    }
+
 
     public boolean isCurrentUser() {
         return currentUser;
@@ -122,6 +134,7 @@ public class User extends Model {
             user.uid = jsonObject.getLong("id");
             user.screenName = jsonObject.getString("screen_name");
             user.profileImageUrl = jsonObject.getString("profile_image_url");
+            user.profileBackgroundImageUrl = jsonObject.optString("profile_background_image_url");
         } catch (JSONException e) {
             e.printStackTrace();
         }
