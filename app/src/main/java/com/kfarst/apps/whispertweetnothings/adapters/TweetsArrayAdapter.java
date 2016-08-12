@@ -93,7 +93,6 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivProfileImage);
 
-
         holder.tvUserName.setText(tweet.getUser().getScreenName());
         holder.tvTweetBody.setText(tweet.getStatus());
         holder.tvRelativeTimestamp.setText(getRelativeTimeAgo(tweet.getCreatedAt()));

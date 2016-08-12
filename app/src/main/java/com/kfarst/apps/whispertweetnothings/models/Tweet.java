@@ -48,6 +48,9 @@ public class Tweet extends Model {
     @Column(name = "retweetCount")
     private int retweetCount;
 
+    @Column(name = "favoriteCount")
+    private int favoriteCount;
+
 	public Tweet() {
 		super();
 	}
@@ -85,6 +88,13 @@ public class Tweet extends Model {
         this.retweetCount = retweetCount;
     }
 
+    public int getFavoriteCount() {
+        return favoriteCount;
+    }
+
+    public void setFavoriteCount(int favoriteCount) {
+        this.favoriteCount = favoriteCount;
+    }
 
     // Record Finders
     public static Tweet byId(long uid) {
@@ -130,6 +140,7 @@ public class Tweet extends Model {
             tweet.uid = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.retweetCount = jsonObject.getInt("retweet_count");
+            tweet.favoriteCount = jsonObject.getInt("favorite_count");
             tweet.user = User.findOrCreateFromJSON(jsonObject.getJSONObject("user"));
 
             JSONObject entitiesObj = (JSONObject) jsonObject.optJSONObject("entities");

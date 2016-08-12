@@ -43,6 +43,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
     @BindView(R.id.tvTweetDetailStatus) LinkifiedTextView tvTweetDetailStatus;
     @BindView(R.id.ivTweetMedia) ImageView ivTweetMedia;
     @BindView(R.id.tvRetweetCount) TextView tvRetweetCount;
+    @BindView(R.id.tvFavoriteCount) TextView tvFavoriteCount;
     @BindView(R.id.ivTweetReply) ImageView ivTweetReply;
     @BindView(R.id.divider3) View bottomDivider;
 
@@ -94,6 +95,8 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
         tvTweetUserHandle.setText("@" + tweet.getUser().getScreenName());
         tvTweetDetailStatus.setText(tweet.getStatus());
         tvRetweetCount.setText(""+tweet.getRetweetCount());
+
+        tvFavoriteCount.setText(""+tweet.getFavoriteCount());
 
         if (tweet.getMediaUrl() != null) {
             Glide.with(ivTweetMedia.getContext())
