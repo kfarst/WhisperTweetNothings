@@ -2,9 +2,6 @@ package com.kfarst.apps.whispertweetnothings.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.codepath.apps.whispertweetnothings.R;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
@@ -15,7 +12,6 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 /**

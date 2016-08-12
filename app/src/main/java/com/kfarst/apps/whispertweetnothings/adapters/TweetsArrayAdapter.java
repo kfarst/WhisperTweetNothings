@@ -6,7 +6,6 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,12 +28,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  * Created by kfarst on 7/25/16.
  */
 public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.ViewHolder> {
-    public interface OnTweetClickListener {
-       void onTweetClick(Tweet tweet);
-    }
     public List<Tweet> mTweets;
-    private AdapterView.OnItemClickListener listener;
-    private static OnTweetClickListener tweetClickListener;
 
     // Pass in the contact array into the constructor
     public TweetsArrayAdapter(List<Tweet> tweets) {
@@ -43,7 +37,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
         @BindView(R.id.tvUserName) TextView tvUserName;
         @BindView(R.id.tvTweetBody) LinkifiedTextView tvTweetBody;
@@ -56,23 +50,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
             super(itemView);
 
             ButterKnife.bind(this, itemView);
-
-            itemView.setOnClickListener(this);
         }
-
-        @Override
-        public void onClick(View view) {
-            Tweet tweet = mTweets.get(getAdapterPosition());
-
-            // Find the selected tweet to render the detail activity
-            if (tweet != null) {
-                tweetClickListener.onTweetClick(tweet);
-            }
-        }
-    }
-
-    public void setOnTweetClickListener(OnTweetClickListener listener) {
-        tweetClickListener = listener;
     }
 
     @Override

@@ -1,15 +1,16 @@
 package com.kfarst.apps.whispertweetnothings.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.apps.whispertweetnothings.R;
+import com.kfarst.apps.whispertweetnothings.activities.TweetActivity;
 import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
 import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
@@ -18,8 +19,11 @@ import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.kfarst.apps.whispertweetnothings.models.User;
 import com.kfarst.apps.whispertweetnothings.support.DividerItemDecoration;
 import com.kfarst.apps.whispertweetnothings.support.EndlessRecyclerViewScrollListener;
+import com.kfarst.apps.whispertweetnothings.support.ItemClickSupport;
 import com.kfarst.apps.whispertweetnothings.support.SmoothScrollLinearLayoutManager;
 import com.yalantis.taurus.PullToRefreshView;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,21 +84,22 @@ public abstract class TweetsListFragment extends Fragment {
 
         tweets = new ArrayList<Tweet>();
         adapter = new TweetsArrayAdapter(tweets);
-        //adapter.setOnTweetClickListener(view.getContext());
         lvTweets.setAdapter(adapter);
 
-        pullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                pullToRefreshView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        populateTimeline(null);
-                        pullToRefreshView.setRefreshing(false);
-                    }
-                }, REFRESH_DELAY);
-            }
+        ItemClickSupport.addTo(lvTweets).setOnItemClickListener((recyclerView, position, v) -> {
+            Intent tweetIntent = new Intent(getActivity(), TweetActivity.class);
+            tweetIntent.putExtra("tweet", Parcels.wrap(tweets.get(position)));
+
+            // If offline do not allow user to reply to a tweet
+            tweetIntent.putExtra("isOnline", timelineViewModel.isOnline.get());
+
+            startActivityForResult(tweetIntent, REQUEST_CODE);
         });
+
+        pullToRefreshView.setOnRefreshListener(() -> pullToRefreshView.postDelayed(() -> {
+            populateTimeline(null);
+            pullToRefreshView.setRefreshing(false);
+        }, REFRESH_DELAY));
     }
 
     protected void appendTweets(List<Tweet> newTweets) {

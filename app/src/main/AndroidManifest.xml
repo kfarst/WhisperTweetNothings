@@ -54,6 +54,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kfarst.apps.whispertweetnothings.activities.TimelineActivity" />
         </activity>
+        <activity
+            android:name="com.kfarst.apps.whispertweetnothings.activities.UserProfileActivity"
+            android:label="@string/title_activity_user_profile"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

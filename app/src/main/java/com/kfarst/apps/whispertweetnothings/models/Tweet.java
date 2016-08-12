@@ -7,7 +7,6 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.github.underscore.$;
-import com.github.underscore.Block;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -192,11 +191,7 @@ public class Tweet extends Model {
     public static void deleteAllById(ArrayList<Tweet> tweets) {
         ActiveAndroid.beginTransaction();
         try {
-            $.each(tweets, new Block<Tweet>() {
-                public void apply(Tweet tweet) {
-                    deleteById(tweet.getUid());
-                }
-            });
+            $.each(tweets, tweet -> deleteById(tweet.getUid()));
             ActiveAndroid.setTransactionSuccessful();
         }
         finally {

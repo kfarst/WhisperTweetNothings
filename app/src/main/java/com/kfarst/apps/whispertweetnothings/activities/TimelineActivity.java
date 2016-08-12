@@ -1,16 +1,13 @@
 package com.kfarst.apps.whispertweetnothings.activities;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,23 +17,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
 import com.codepath.apps.whispertweetnothings.databinding.ActivityTimelineBinding;
 import com.kfarst.apps.whispertweetnothings.adapters.TimelineFragmentPagerAdapter;
-import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
 import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
 import com.kfarst.apps.whispertweetnothings.fragments.ComposeTweetFragment;
 import com.kfarst.apps.whispertweetnothings.models.TimelineViewModel;
-import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.kfarst.apps.whispertweetnothings.models.User;
-import com.kfarst.apps.whispertweetnothings.support.ColoredSnackBar;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +34,7 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-public class TimelineActivity extends AppCompatActivity /*implements ComposeTweetFragment.PostStatusDialogListener, TweetsArrayAdapter.OnTweetClickListener*/ {
+public class TimelineActivity extends AppCompatActivity /*implements ComposeTweetFragment.PostStatusDialogListener*/ {
 
     @BindView(R.id.ivToolbarProfileImage) ImageView ivToolbarProfileImage;
     @BindView(R.id.viewpager) ViewPager viewPager;
@@ -170,17 +160,6 @@ public class TimelineActivity extends AppCompatActivity /*implements ComposeTwee
     //            return TextUtils.join(" ", errorString);
     //        }
     //    });
-    //}
-
-    //@Override
-    //public void onTweetClick(final Tweet tweet) {
-    //    Intent tweetIntent = new Intent(this, TweetActivity.class);
-    //    tweetIntent.putExtra("tweet", Parcels.wrap(tweet));
-
-    //    // If offline do not allow user to reply to a tweet
-    //    tweetIntent.putExtra("isOnline", timelineViewModel.isOnline.get());
-
-    //    startActivityForResult(tweetIntent, REQUEST_CODE);
     //}
 
    //@Override

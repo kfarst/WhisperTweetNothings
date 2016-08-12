@@ -13,5 +13,6 @@
     <string name="tweet_success">Status successfully tweeted.</string>
     <string name="offline_warning_message">You are currently offline and will not be able to update or post to your timeline.</string>
     <string name="tweet_success_message">Status successfully tweeted.</string>
+    <string name="title_activity_user_profile">UserProfileActivity</string>
 
 </resources>
