@@ -17,13 +17,24 @@ import cz.msebera.android.httpclient.Header;
 /**
  * Created by kfarst on 8/8/16.
  */
-public class HomeTimelineFragment extends TweetsListFragment {
+public class UserTimelineFragment extends TweetsListFragment {
+    private static String ARG_USER_SCREEN_NAME = "user_screen_name";
+    private String userScreenName;
 
-    public static HomeTimelineFragment newInstance() {
-        HomeTimelineFragment fragment = new HomeTimelineFragment();
+    public static UserTimelineFragment newInstance(String userScreenName) {
+        UserTimelineFragment fragment = new UserTimelineFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_USER_SCREEN_NAME, userScreenName);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle bundle) {
+        if (getArguments() != null)  {
+            userScreenName = getArguments().getString(ARG_USER_SCREEN_NAME);
+        }
+        super.onCreate(bundle);
     }
 
     @Override
@@ -36,7 +47,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
         //    ColoredSnackBar.warning(offlineSnackbar).show();
         //}
 
-        client.getTimelineFor("home", maxId, null, new JsonHttpResponseHandler() {
+        client.getTimelineFor("user", maxId, userScreenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 ArrayList<Tweet> list = new ArrayList<Tweet>();

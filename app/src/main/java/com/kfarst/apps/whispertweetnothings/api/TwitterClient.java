@@ -10,6 +10,8 @@ import com.loopj.android.http.RequestParams;
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
 
+import cz.msebera.android.httpclient.util.TextUtils;
+
 /*
  * 
  * This is the object responsible for communicating with a REST API. 
@@ -35,7 +37,7 @@ public class TwitterClient extends OAuthBaseClient {
 
 	// CHANGE THIS
 	// DEFINE METHODS for different API endpoints here
-	public void getTimelineFor(String timelineType, Long maxID, AsyncHttpResponseHandler handler) {
+	public void getTimelineFor(String timelineType, Long maxID, String userScreenName, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/" + timelineType + "_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
@@ -45,6 +47,10 @@ public class TwitterClient extends OAuthBaseClient {
 		if (maxID != null) {
 			params.put("max_id", maxID);
 		}
+
+        if (!TextUtils.isBlank(userScreenName)) {
+            params.put("screen_name", userScreenName);
+        }
 
 		client.get(apiUrl, params, handler);
 	}

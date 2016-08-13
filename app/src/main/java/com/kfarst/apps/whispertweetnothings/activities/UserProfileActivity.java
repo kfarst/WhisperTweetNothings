@@ -2,6 +2,7 @@ package com.kfarst.apps.whispertweetnothings.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.kfarst.apps.whispertweetnothings.fragments.UserTimelineFragment;
 import com.kfarst.apps.whispertweetnothings.models.User;
 import com.kfarst.apps.whispertweetnothings.support.ViewHelper;
 
@@ -81,6 +83,15 @@ public class UserProfileActivity extends AppCompatActivity implements Observable
         tvUserProfileDescription.setText(user.getDescription());
         tvUserProfileFollowingCount.setText(""+user.getFriendsCount());
         tvUserProfileFollowersCount.setText(""+user.getFollowersCount());
+
+        // Begin the transaction
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        // Replace the contents of the container with the new fragment
+        ft.replace(R.id.fragUserProfileTimeline, UserTimelineFragment.newInstance(user.getScreenName()));
+
+        // Complete the changes added above
+        ft.commit();
     }
 
     @Override

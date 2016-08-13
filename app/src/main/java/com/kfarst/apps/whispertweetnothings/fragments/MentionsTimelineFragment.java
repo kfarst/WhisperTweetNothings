@@ -28,7 +28,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 
     @Override
     protected void populateTimeline(Long maxId) {
-        client.getTimelineFor("mentions", maxId, new JsonHttpResponseHandler() {
+        client.getTimelineFor("mentions", maxId, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 ArrayList<Tweet> list = new ArrayList<Tweet>();
