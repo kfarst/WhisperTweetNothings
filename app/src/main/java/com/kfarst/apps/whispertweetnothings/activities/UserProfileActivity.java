@@ -1,6 +1,8 @@
 package com.kfarst.apps.whispertweetnothings.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -81,8 +83,8 @@ public class UserProfileActivity extends AppCompatActivity implements Observable
         tvUserProfileName.setText(user.getName());
         tvUserProfileHandle.setText("@"+user.getScreenName());
         tvUserProfileDescription.setText(user.getDescription());
-        tvUserProfileFollowingCount.setText(""+user.getFriendsCount());
-        tvUserProfileFollowersCount.setText(""+user.getFollowersCount());
+        tvUserProfileFollowingCount.setText(commaSeparatedNumber(user.getFriendsCount()));
+        tvUserProfileFollowersCount.setText(commaSeparatedNumber(user.getFollowersCount()));
 
         // Begin the transaction
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -125,5 +127,11 @@ public class UserProfileActivity extends AppCompatActivity implements Observable
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @SuppressLint("NewApi")
+    private String commaSeparatedNumber(int num) {
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+        return formatter.format(num);
     }
 }
