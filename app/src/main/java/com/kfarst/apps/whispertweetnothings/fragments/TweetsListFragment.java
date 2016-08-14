@@ -108,6 +108,13 @@ public abstract class TweetsListFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    public void prependTweet(Tweet newTweet) {
+        // add tweets to the beginning of the adapter
+        tweets.add(0, newTweet);
+        adapter.notifyItemInserted(0);
+        lvTweets.scrollToPosition(0);
+    }
+
     // Abstract method to be overridden
     protected abstract void populateTimeline(Long maxId);
 }

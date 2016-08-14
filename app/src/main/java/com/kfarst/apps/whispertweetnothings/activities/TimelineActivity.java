@@ -1,14 +1,17 @@
 package com.kfarst.apps.whispertweetnothings.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,12 +25,18 @@ import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.api.TwitterClient;
 import com.kfarst.apps.whispertweetnothings.fragments.ComposeTweetFragment;
 import com.kfarst.apps.whispertweetnothings.models.TimelineViewModel;
+import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.kfarst.apps.whispertweetnothings.models.User;
+import com.kfarst.apps.whispertweetnothings.support.ColoredSnackBar;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +45,10 @@ import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class TimelineActivity extends AppCompatActivity /*implements ComposeTweetFragment.PostStatusDialogListener*/ {
+public class TimelineActivity extends AppCompatActivity implements ComposeTweetFragment.PostStatusDialogListener {
+    public interface PostTweetListener {
+        public void postNewTweet(Tweet tweet);
+    }
 
     @BindView(R.id.ivToolbarProfileImage) ImageView ivToolbarProfileImage;
     @BindView(R.id.viewpager) ViewPager viewPager;
@@ -49,6 +61,7 @@ public class TimelineActivity extends AppCompatActivity /*implements ComposeTwee
     private User currentUser;
     private TimelineViewModel timelineViewModel = new TimelineViewModel();
     private ActivityTimelineBinding binding;
+    private PostTweetListener postTweetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +80,11 @@ public class TimelineActivity extends AppCompatActivity /*implements ComposeTwee
 
         setupViews();
         getCurrentUser();
+    }
+
+    // Assign the listener implementing events interface that will receive the events
+    public void setPostTweetListener(PostTweetListener listener) {
+        postTweetListener = listener;
     }
 
     private void getCurrentUser() {
@@ -118,65 +136,58 @@ public class TimelineActivity extends AppCompatActivity /*implements ComposeTwee
         composeDialog.show(fm, "fragment_compose_tweet");
     }
 
-    //@Override
-    //public void onFinishEditDialog(Tweet tweet) {
-    //    client.postStatus(tweet, new JsonHttpResponseHandler() {
-    //        @Override
-    //        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-    //            // New tweet has been composed, add to the timeline
-    //            tweets.add(0, Tweet.fromJSON(response));
-    //            adapter.notifyItemInserted(0);
+    @Override
+    public void onFinishEditDialog(Tweet tweet) {
+        client.postStatus(tweet, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // New tweet has been composed, add to the timeline
+                postTweetListener.postNewTweet(Tweet.fromJSON(response));
+                Snackbar snackbar = Snackbar.make(viewPager, R.string.tweet_success_message, Snackbar.LENGTH_SHORT);
+                ColoredSnackBar.confirm(snackbar).show();
+            }
 
-    //            // Scroll to top of timeline to see new composed tweet
-    //            lvTweets.scrollToPosition(0);
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                String errorMessage = getErrorsFromResponse(errorResponse);
 
-    //            Snackbar snackbar = Snackbar.make(lvTweets, R.string.tweet_success_message, Snackbar.LENGTH_SHORT);
-    //            ColoredSnackBar.confirm(snackbar).show();
-    //        }
+                // If API returns errors, show them to the user
+                if (!TextUtils.isEmpty(errorMessage)) {
+                    Snackbar snackbar = Snackbar.make(viewPager, errorMessage, Snackbar.LENGTH_SHORT);
+                    ColoredSnackBar.alert(snackbar).show();
+                }
+            }
 
-    //        @Override
-    //        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-    //            String errorMessage = getErrorsFromResponse(errorResponse);
+            public String getErrorsFromResponse(JSONObject errorResponse) {
+                ArrayList<String> errorString = new ArrayList<String>();
 
-    //            // If API returns errors, show them to the user
-    //            if (!TextUtils.isEmpty(errorMessage)) {
-    //                Snackbar snackbar = Snackbar.make(lvTweets, errorMessage, Snackbar.LENGTH_SHORT);
-    //                ColoredSnackBar.alert(snackbar).show();
-    //            }
-    //        }
+                try {
+                    JSONArray errors = errorResponse.getJSONArray("errors");
 
-    //        public String getErrorsFromResponse(JSONObject errorResponse) {
-    //            ArrayList<String> errorString = new ArrayList<String>();
+                    for (int i = 0; i < errors.length(); i++) {
+                        errorString.add(String.valueOf(errors.getJSONObject(i).get("message")));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-    //            try {
-    //                JSONArray errors = errorResponse.getJSONArray("errors");
+                // Concatenate errors into one string separated by a space
+                return TextUtils.join(" ", errorString);
+            }
+        });
+    }
 
-    //                for (int i = 0; i < errors.length(); i++) {
-    //                    errorString.add(String.valueOf(errors.getJSONObject(i).get("message")));
-    //                }
-    //            } catch (JSONException e) {
-    //                e.printStackTrace();
-    //            }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable("tweet"));
 
-    //            // Concatenate errors into one string separated by a space
-    //            return TextUtils.join(" ", errorString);
-    //        }
-    //    });
-    //}
-
-   //@Override
-   //protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-   //    if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-   //        Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable("tweet"));
-
-   //        // New tweet is always created, so only add to timeline if it has been posted to the API
-   //        if (tweet.getUid() != null) {
-   //            tweets.add(0, tweet);
-   //            adapter.notifyItemInserted(0);
-   //            lvTweets.scrollToPosition(0);
-   //        }
-   //    }
-  //}
+            // New tweet is always created, so only add to timeline if it has been posted to the API
+            if (tweet.getUid() != null) {
+                postTweetListener.postNewTweet(tweet);
+            }
+        }
+    }
 
     public boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();

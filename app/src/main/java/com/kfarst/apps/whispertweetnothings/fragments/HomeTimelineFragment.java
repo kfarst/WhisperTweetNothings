@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 
 import com.codepath.apps.whispertweetnothings.R;
+import com.kfarst.apps.whispertweetnothings.activities.TimelineActivity;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
 import com.kfarst.apps.whispertweetnothings.support.ColoredSnackBar;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,6 +25,20 @@ public class HomeTimelineFragment extends TweetsListFragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle bundle) {
+        TimelineActivity activity = (TimelineActivity) getActivity();
+        activity.setPostTweetListener(new TimelineActivity.PostTweetListener() {
+
+            @Override
+            public void postNewTweet(Tweet tweet) {
+                prependTweet(tweet);
+            }
+        });
+
+        super.onCreate(bundle);
     }
 
     @Override
