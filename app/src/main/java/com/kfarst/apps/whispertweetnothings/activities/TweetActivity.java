@@ -170,6 +170,13 @@ public class TweetActivity extends AppCompatActivity implements ComposeTweetFrag
         });
     }
 
+    @OnClick(R.id.ivTweetProfileImage)
+    public void onProfileImageClick(View view) {
+        Intent i = new Intent(view.getContext(), UserProfileActivity.class);
+        i.putExtra("user", Parcels.wrap(tweet.getUser()));
+        view.getContext().startActivity(i);
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
