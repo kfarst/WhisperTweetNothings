@@ -207,4 +207,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+    @OnClick(R.id.ivToolbarProfileImage)
+    public void goToOwnProfile() {
+        Intent i = new Intent(getBaseContext(), UserProfileActivity.class);
+        i.putExtra("user", Parcels.wrap(currentUser));
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getBaseContext().startActivity(i);
+    }
 }
