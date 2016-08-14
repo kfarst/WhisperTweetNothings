@@ -38,4 +38,16 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/MyCustomTextAppearance</item>
+        <item name="tabIndicatorColor">@color/twitter_blue</item>
+        <item name="tabSelectedTextColor">@color/twitter_blue</item>
+    </style>
+
+    <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="fontPath">fonts/HelveticaNeue-Bold.ttf</item>
+        <item name="android:textSize">18sp</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
 </resources>
