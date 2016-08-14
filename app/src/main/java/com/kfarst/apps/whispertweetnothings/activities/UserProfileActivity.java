@@ -2,6 +2,7 @@ package com.kfarst.apps.whispertweetnothings.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -27,6 +28,7 @@ import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class UserProfileActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
@@ -133,5 +135,22 @@ public class UserProfileActivity extends AppCompatActivity implements Observable
     private String commaSeparatedNumber(int num) {
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         return formatter.format(num);
+    }
+
+    @OnClick({ R.id.tvUserProfileFollowingCount, R.id.tvUserProfileFollowingLabel })
+    public void goToFollowingList() {
+        Intent i = new Intent(this, UserConnectionsActivity.class);
+        i.putExtra("screen_name", user.getScreenName());
+        i.putExtra("list_type", "friends");
+        startActivity(i);
+    }
+
+
+    @OnClick({ R.id.tvUserProfileFollowersCount, R.id.tvUserProfileFollowersLabel })
+    public void goToFollowersList() {
+        Intent i = new Intent(this, UserConnectionsActivity.class);
+        i.putExtra("screen_name", user.getScreenName());
+        i.putExtra("list_type", "followers");
+        startActivity(i);
     }
 }

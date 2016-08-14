@@ -5,10 +5,12 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -179,6 +181,28 @@ public class User extends Model {
         }
 
         return user;
+    }
+
+    public static ArrayList<User> fromJSON(JSONArray jsonArray) {
+        JSONObject userJson;
+        ArrayList<User> users = new ArrayList<User>(jsonArray.length());
+
+        // Process each result in json array, decode and convert to tweet object
+        for (int i=0; i < jsonArray.length(); i++) {
+            try {
+                userJson = jsonArray.getJSONObject(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            User user = fromJSON(userJson);
+            if (user != null) {
+                users.add(user);
+            }
+        }
+
+        return users;
     }
 }
 
