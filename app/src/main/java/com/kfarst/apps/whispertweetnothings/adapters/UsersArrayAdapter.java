@@ -39,6 +39,7 @@ public class UsersArrayAdapter extends RecyclerView.Adapter<UsersArrayAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.ivUserConnectionImage) ImageView ivUserConnectionImage;
         @BindView(R.id.tvUserConnectionName) TextView tvUserConnectionName;
+        @BindView(R.id.tvUserConnectionHandle) TextView tvUserConnectionHandle;
         @BindView(R.id.tvUserConnectionDescription) TextView tvUserConnectionDescription;
 
         public ViewHolder(View itemView) {
@@ -86,7 +87,8 @@ public class UsersArrayAdapter extends RecyclerView.Adapter<UsersArrayAdapter.Vi
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivUserConnectionImage);
 
-        holder.tvUserConnectionName.setText(user.getScreenName());
+        holder.tvUserConnectionName.setText(user.getName());
+        holder.tvUserConnectionHandle.setText("@"+user.getScreenName());
         holder.tvUserConnectionDescription.setText(user.getDescription());
     }
 

@@ -44,6 +44,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
         @BindView(R.id.tvUserName) TextView tvUserName;
+        @BindView(R.id.tvUserHandle) TextView tvUserHandle;
         @BindView(R.id.tvTweetBody) LinkifiedTextView tvTweetBody;
         @BindView(R.id.tvRelativeTimestamp) TextView tvRelativeTimestamp;
         @BindView(R.id.ivMedia) ImageView ivMedia;
@@ -93,7 +94,8 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivProfileImage);
 
-        holder.tvUserName.setText(tweet.getUser().getScreenName());
+        holder.tvUserName.setText(tweet.getUser().getName());
+        holder.tvUserHandle.setText("@"+tweet.getUser().getScreenName());
         holder.tvTweetBody.setText(tweet.getStatus());
         holder.tvRelativeTimestamp.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
 

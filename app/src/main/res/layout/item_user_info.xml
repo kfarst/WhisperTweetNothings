@@ -31,10 +31,19 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10m"
-        android:textColor="@android:color/darker_gray"
-        android:id="@+id/tvUserConnectionDescription"
+        android:text="New Text"
+        android:id="@+id/tvUserConnectionHandle"
         android:layout_below="@+id/tvUserConnectionName"
+        android:textColor="@android:color/darker_gray"
+        android:layout_toRightOf="@+id/ivUserConnectionImage"
+        android:layout_toEndOf="@+id/ivUserConnectionImage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10m"
+        android:id="@+id/tvUserConnectionDescription"
+        android:layout_below="@+id/tvUserConnectionHandle"
         android:layout_toRightOf="@+id/ivUserConnectionImage"
         android:layout_toEndOf="@+id/ivUserConnectionImage" />
 
