@@ -30,13 +30,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
     @Override
     public void onCreate(Bundle bundle) {
         TimelineActivity activity = (TimelineActivity) getActivity();
-        activity.setPostTweetListener(new TimelineActivity.PostTweetListener() {
-
-            @Override
-            public void postNewTweet(Tweet tweet) {
-                prependTweet(tweet);
-            }
-        });
+        activity.setPostTweetListener(tweet -> prependTweet(tweet));
 
         super.onCreate(bundle);
     }

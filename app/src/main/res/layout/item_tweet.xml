@@ -42,6 +42,7 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvTweetBody"
+        android:textColorLink="@color/twitter_blue"
         android:autoLink="all"
         android:linksClickable="true"
         android:layout_below="@+id/tvUserHandle"

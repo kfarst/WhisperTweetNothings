@@ -85,12 +85,9 @@ public abstract class TweetsListFragment extends Fragment {
 
         tweets = new ArrayList<Tweet>();
         adapter = new TweetsArrayAdapter(tweets);
-        adapter.setTweetReplyListener(new TweetsArrayAdapter.TweetReplyListener() {
-            @Override
-            public void showTweetReplyDialog(Tweet tweet) {
-                TimelineActivity activity = (TimelineActivity) getActivity();
-                activity.openComposeDialog(tweet);
-            }
+        adapter.setTweetReplyListener(tweet -> {
+            TimelineActivity activity = (TimelineActivity) getActivity();
+            activity.openComposeDialog(tweet);
         });
         lvTweets.setAdapter(adapter);
 

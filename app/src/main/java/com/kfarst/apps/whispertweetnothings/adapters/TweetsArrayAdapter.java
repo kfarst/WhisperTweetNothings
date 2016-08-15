@@ -15,18 +15,25 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codepath.apps.whispertweetnothings.R;
 import com.kfarst.apps.whispertweetnothings.activities.UserProfileActivity;
+import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
 import com.kfarst.apps.whispertweetnothings.models.Tweet;
+import com.kfarst.apps.whispertweetnothings.models.User;
 import com.kfarst.apps.whispertweetnothings.support.LinkifiedTextView;
+import com.kfarst.apps.whispertweetnothings.support.PatternEditableBuilder;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -111,6 +118,23 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         holder.tvUserName.setText(tweet.getUser().getName());
         holder.tvUserHandle.setText("@"+tweet.getUser().getScreenName());
         holder.tvTweetBody.setText(tweet.getStatus());
+
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("\\@(\\w+)"), R.color.twitter_blue,
+                        text -> {
+                            TwitterApplication.getRestClient().getUser(text, new JsonHttpResponseHandler() {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    User user = User.fromJSON(response);
+
+                                    Intent i = new Intent(holder.tvTweetBody.getContext(), UserProfileActivity.class);
+                                    i.putExtra("user", Parcels.wrap(user));
+                                    holder.tvTweetBody.getContext().startActivity(i);
+                                }
+                            });
+                        }).into(holder.tvTweetBody);
+
+
         holder.tvRelativeTimestamp.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
 
         // Remove and hide image from item if re-used in the list view until a new image has loaded
