@@ -71,6 +71,10 @@ Here's a walkthrough of implemented user stories:
 
 <img src='https://d17oy1vhnax1f7.cloudfront.net/items/14011X0K0T2L2P3n2t3t/V2InfinitePagination.gif?v=f15c7897' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
+**View User Profiles by Clicking on Usernames in Tweets**
+
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/0A2D0w1R2n253D1a2716/V2ClickOnUsernames.gif?v=6f7107fb' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
