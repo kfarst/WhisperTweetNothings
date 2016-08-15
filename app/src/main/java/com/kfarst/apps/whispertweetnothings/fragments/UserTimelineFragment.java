@@ -70,4 +70,9 @@ public class UserTimelineFragment extends TweetsListFragment {
             }
         });
     }
+
+    @Override
+    protected boolean hideReplyButton() {
+        return true;
+    }
 }

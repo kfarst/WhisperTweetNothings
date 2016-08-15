@@ -46,11 +46,13 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
     public List<Tweet> mTweets;
     public TweetReplyListener listener;
+    public boolean hideReplyButton = false;
 
     // Pass in the contact array into the constructor
-    public TweetsArrayAdapter(List<Tweet> tweets) {
+    public TweetsArrayAdapter(List<Tweet> tweets, boolean hideReplyButton) {
         mTweets = tweets;
         listener = null;
+        this.hideReplyButton = hideReplyButton;
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -107,7 +109,11 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
         holder.ivProfileImage.setOnClickListener(holder);
 
-        holder.ibTweetReply.setOnClickListener(holder);
+        if (hideReplyButton == true) {
+            holder.ibTweetReply.setVisibility(View.GONE);
+        } else {
+            holder.ibTweetReply.setOnClickListener(holder);
+        }
 
         Glide.with(holder.itemView.getContext())
                 .load(tweet.getUser().getProfileImageUrl())

@@ -84,7 +84,7 @@ public abstract class TweetsListFragment extends Fragment {
         lvTweets.addItemDecoration(new DividerItemDecoration(view.getContext()));
 
         tweets = new ArrayList<Tweet>();
-        adapter = new TweetsArrayAdapter(tweets);
+        adapter = new TweetsArrayAdapter(tweets, hideReplyButton());
         adapter.setTweetReplyListener(tweet -> {
             TimelineActivity activity = (TimelineActivity) getActivity();
             activity.openComposeDialog(tweet);
@@ -118,6 +118,10 @@ public abstract class TweetsListFragment extends Fragment {
         tweets.add(0, newTweet);
         adapter.notifyItemInserted(0);
         lvTweets.scrollToPosition(0);
+    }
+
+    protected boolean hideReplyButton() {
+        return false;
     }
 
     // Abstract method to be overridden
