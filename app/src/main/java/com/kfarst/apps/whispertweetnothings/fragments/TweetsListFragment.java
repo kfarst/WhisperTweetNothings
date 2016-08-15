@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.apps.whispertweetnothings.R;
+import com.kfarst.apps.whispertweetnothings.activities.TimelineActivity;
 import com.kfarst.apps.whispertweetnothings.activities.TweetActivity;
 import com.kfarst.apps.whispertweetnothings.adapters.TweetsArrayAdapter;
 import com.kfarst.apps.whispertweetnothings.api.TwitterApplication;
@@ -84,6 +85,13 @@ public abstract class TweetsListFragment extends Fragment {
 
         tweets = new ArrayList<Tweet>();
         adapter = new TweetsArrayAdapter(tweets);
+        adapter.setTweetReplyListener(new TweetsArrayAdapter.TweetReplyListener() {
+            @Override
+            public void showTweetReplyDialog(Tweet tweet) {
+                TimelineActivity activity = (TimelineActivity) getActivity();
+                activity.openComposeDialog(tweet);
+            }
+        });
         lvTweets.setAdapter(adapter);
 
         ItemClickSupport.addTo(lvTweets).setOnItemClickListener((recyclerView, position, v) -> {

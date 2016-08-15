@@ -64,7 +64,20 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:layout_toEndOf="@+id/ivProfileImage"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/ibTweetReply"
+        android:layout_below="@+id/ivMedia"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:src="@drawable/ic_reply"
+        android:tint="@android:color/darker_gray"
+        android:layout_width="wrap_content"
+        android:background="@android:color/transparent"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,11 +33,17 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  * Created by kfarst on 7/25/16.
  */
 public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.ViewHolder> {
+    public interface TweetReplyListener {
+        public void showTweetReplyDialog(Tweet tweet);
+    }
+
     public List<Tweet> mTweets;
+    public TweetReplyListener listener;
 
     // Pass in the contact array into the constructor
     public TweetsArrayAdapter(List<Tweet> tweets) {
         mTweets = tweets;
+        listener = null;
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -48,6 +55,7 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         @BindView(R.id.tvTweetBody) LinkifiedTextView tvTweetBody;
         @BindView(R.id.tvRelativeTimestamp) TextView tvRelativeTimestamp;
         @BindView(R.id.ivMedia) ImageView ivMedia;
+        @BindView(R.id.ibTweetReply) ImageButton ibTweetReply;
 
         public ViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
@@ -59,9 +67,13 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
 
         @Override
         public void onClick(View view) {
-            Intent i = new Intent(view.getContext(), UserProfileActivity.class);
-            i.putExtra("user", Parcels.wrap(mTweets.get(getAdapterPosition()).getUser()));
-            view.getContext().startActivity(i);
+            if (view.getId() == R.id.ivProfileImage) {
+                Intent i = new Intent(view.getContext(), UserProfileActivity.class);
+                i.putExtra("user", Parcels.wrap(mTweets.get(getAdapterPosition()).getUser()));
+                view.getContext().startActivity(i);
+            } else if (view.getId() == R.id.ibTweetReply) {
+                listener.showTweetReplyDialog(mTweets.get(getAdapterPosition()));
+            }
         }
     }
 
@@ -87,6 +99,8 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         holder.ivProfileImage.setImageResource(android.R.color.darker_gray);
 
         holder.ivProfileImage.setOnClickListener(holder);
+
+        holder.ibTweetReply.setOnClickListener(holder);
 
         Glide.with(holder.itemView.getContext())
                 .load(tweet.getUser().getProfileImageUrl())
@@ -134,5 +148,10 @@ public class TweetsArrayAdapter extends RecyclerView.Adapter<TweetsArrayAdapter.
         }
 
         return relativeDate;
+    }
+
+    // Assign the listener implementing events interface that will receive the events
+    public void setTweetReplyListener(TweetReplyListener listener) {
+        this.listener = listener;
     }
 }

@@ -129,11 +129,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
    }
 
     @OnClick(R.id.fabCompose)
-    public void openComposeDialog(View view) {
-        FragmentManager fm = getSupportFragmentManager();
-        ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(null);
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
-        composeDialog.show(fm, "fragment_compose_tweet");
+    public void composeNewTweet(View view) {
+        openComposeDialog(null);
     }
 
     @Override
@@ -215,4 +212,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeTweetF
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getBaseContext().startActivity(i);
     }
+
+    public void openComposeDialog(Tweet tweet) {
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(tweet);
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        composeDialog.show(fm, "fragment_compose_tweet");
+    }
+
 }
