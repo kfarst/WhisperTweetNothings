@@ -1,3 +1,5 @@
+***NOTE: New and improved version on branch v_2_0***
+
 # Project 3 - *Whisper Tweet Nothings*
 
 **Whisper Tweet Nothings** is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
