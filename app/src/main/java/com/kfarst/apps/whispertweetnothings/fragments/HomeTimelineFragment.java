@@ -11,6 +11,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
@@ -38,12 +39,12 @@ public class HomeTimelineFragment extends TweetsListFragment {
     @Override
     protected void populateTimeline(Long maxId) {
         // If not online and no tweets loaded, fetch them from the database
-        //if (!isOnline() && tweets.size() == 0) {
-        //    tweets.addAll(Tweet.recentItems());
-        //    adapter.notifyDataSetChanged();
-        //    Snackbar offlineSnackbar = Snackbar.make(lvTweets, R.string.offline_warning_message, Snackbar.LENGTH_LONG);
-        //    ColoredSnackBar.warning(offlineSnackbar).show();
-        //}
+        if (!isOnline() && tweets.size() == 0) {
+            tweets.addAll(Tweet.recentItems());
+            adapter.notifyDataSetChanged();
+            Snackbar offlineSnackbar = Snackbar.make(lvTweets, R.string.offline_warning_message, Snackbar.LENGTH_LONG);
+            ColoredSnackBar.warning(offlineSnackbar).show();
+        }
 
         client.getTimelineFor("home", maxId, null, new JsonHttpResponseHandler() {
             @Override
@@ -67,5 +68,19 @@ public class HomeTimelineFragment extends TweetsListFragment {
                 ColoredSnackBar.alert(errorSnackbar).show();
             }
         });
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            timelineViewModel.isOnline.set(exitValue == 0);
+            return timelineViewModel.isOnline.get();
+        } catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+
+        timelineViewModel.isOnline.set(false);
+        return timelineViewModel.isOnline.get();
     }
 }

@@ -47,22 +47,29 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-**Login and Posting a Tweet**
+**Login, Viewing, and Posting a Tweet**
 
-<img src='https://d17oy1vhnax1f7.cloudfront.net/items/1q2G010K2a3j1F2i2Z09/walkthrough1.gif?v=3efc1d4d' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/0O0Z0g3w3E331l103S46/V2LoginAndTweet.gif?v=5fe8c43d' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 **Offline Capabilities**
 
-<img src='https://d17oy1vhnax1f7.cloudfront.net/items/372H0A33012r3o1P043c/walkthrough2.gif?v=393c5227' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/3W1o3v2n3M3616021R2W/V2Offline.gif?v=9ed63c59' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 **Replying to a Tweet**
 
-<img src='https://d17oy1vhnax1f7.cloudfront.net/items/1t3d2P321P0o351a2n09/walkthrough3.gif?v=3f031ca1' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/290o2w2U0J3k0x2G2h20/V2ReplyToTweet.gif?v=cbc7ba97' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 **Clicking Links in Tweets**
 
-<img src='https://d17oy1vhnax1f7.cloudfront.net/items/3N15183M0E3q3b100q41/walkthrough4.gif?v=b08170f6' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/252c2w231b0e1N1n3W0Q/V2LinksInTweets.gif?v=1aa76e5b' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
+**View Profiles and Connections**
+
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/1O311A1I3G0j1S00442m/V2ViewProfilesAndConnections.gif?v=d7d2131e' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+**Infinite Pagination on All Timelines**
+
+<img src='https://d17oy1vhnax1f7.cloudfront.net/items/14011X0K0T2L2P3n2t3t/V2InfinitePagination.gif?v=f15c7897' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
