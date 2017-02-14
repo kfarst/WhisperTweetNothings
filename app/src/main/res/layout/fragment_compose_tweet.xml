@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:attr="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable name="tweetViewModel" type="com.kfarst.apps.whispertweetnothings.models.TweetViewModel"/>
@@ -42,8 +43,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="What's happening?"
-            android:text="@{tweetViewModel.tweet.status}"
-            android:addTextChangedListener="@{tweetViewModel.watcher}"
             android:background="@android:color/transparent"
             android:textColorHint="@android:color/darker_gray"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -55,23 +54,22 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/ivOwnProfileImage" />
 
-        <TextView
+        <com.kfarst.apps.whispertweetnothings.support.CounterTextView
+            android:id="@+id/counterTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{""+tweetViewModel.charactersRemaining}'
-            android:textColor="@{tweetViewModel.charactersRemaining > -1 ? @android:color/darker_gray : @android:color/holo_red_dark}"
+            attr:validTextColor="@android:color/darker_gray"
+            attr:invalidTextColor="@android:color/holo_red_dark"
             android:layout_alignBaseline="@+id/btnTweet"
             android:layout_toLeftOf="@+id/btnTweet" />
 
-        <Button
+        <com.kfarst.apps.whispertweetnothings.support.TweetSubmitButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:background="@drawable/rounded_button"
             android:text="Tweet"
             android:id="@+id/btnTweet"
-            android:alpha="@{tweetViewModel.charactersRemaining == 140 || tweetViewModel.charactersRemaining &lt; 0 ? 0.5f : 1.0f}"
-            android:clickable="@{tweetViewModel.charactersRemaining &lt; 140 &amp;&amp; tweetViewModel.charactersRemaining > -1 ? true : false}"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:stateListAnimator="@null"
             android:layout_marginBottom="@dimen/activity_vertical_margin"

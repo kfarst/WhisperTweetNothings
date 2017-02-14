@@ -32,11 +32,11 @@ public class ComposeTweetFragment extends DialogFragment {
     }
 
     private FragmentComposeTweetBinding binding;
+    private TweetViewModel tweetViewModel;
     private Tweet respondingTweet;
     private User currentUser;
     private Tweet tweet = new Tweet();
     private static String ARG_RESPONDING_TWEET = "currentUser";
-    private static Integer TOTAL_TWEET_LENGTH = 140;
 
     // TODO: Rename and change types and number of parameters
     public static ComposeTweetFragment newInstance(Tweet respondingTweet) {
@@ -56,11 +56,10 @@ public class ComposeTweetFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_compose_tweet, container, false);
-        binding = FragmentComposeTweetBinding.bind(view);
 
-        // Bind view model for observing the number of tweet characters
-        binding.setTweetViewModel(new TweetViewModel(tweet));
         ButterKnife.bind(this, view);
+
+        binding = FragmentComposeTweetBinding.bind(view);
 
         getCurrentUser();
 
@@ -70,10 +69,11 @@ public class ComposeTweetFragment extends DialogFragment {
             // If responding to a tweet, prepend it with the user's handle who the user is replying to
             if (respondingTweet != null) {
                 String replyHandle = "@" + respondingTweet.getUser().getScreenName() + " ";
-                binding.getTweetViewModel().getTweet().setStatus(replyHandle);
-                binding.getTweetViewModel().charactersRemaining.set(TOTAL_TWEET_LENGTH - replyHandle.length());
+                tweet.setStatus(replyHandle);
             }
         }
+
+        tweetViewModel = new TweetViewModel(view, tweet);
 
         return view;
     }

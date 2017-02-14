@@ -2,12 +2,10 @@
 <resources>
 
     <string name="app_name">Whisper Tweet Nothings</string>
-    <string name="action_settings">Settings</string>
     <string name="title_activity_timeline">Home Timeline</string>
     <string name="login_label">Connect to Twitter</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_tweet">TweetActivity</string>
     <string name="offline_error_message">Cannot retrieve messages at this time. Please try again later.</string>
     <string name="tweet_success">Status successfully tweeted.</string>

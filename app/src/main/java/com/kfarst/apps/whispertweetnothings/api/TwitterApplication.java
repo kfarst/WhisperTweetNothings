@@ -2,7 +2,11 @@ package com.kfarst.apps.whispertweetnothings.api;
 
 import android.content.Context;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Configuration;
 import com.codepath.apps.whispertweetnothings.R;
+import com.kfarst.apps.whispertweetnothings.models.Tweet;
+import com.kfarst.apps.whispertweetnothings.models.User;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -21,7 +25,18 @@ public class TwitterApplication extends com.activeandroid.app.Application {
 
 	@Override
 	public void onCreate() {
+		deleteDatabase("RestClient.db");
+
+		Configuration dbConfiguration = new Configuration.Builder(this)
+		        .setDatabaseName("RestClient.db")
+		        .setDatabaseVersion(1)
+		        .addModelClasses(Tweet.class)
+		        .addModelClasses(User.class)
+		        .create();
+		ActiveAndroid.initialize(dbConfiguration);
+
 		super.onCreate();
+
 		TwitterApplication.context = this;
 
 		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
